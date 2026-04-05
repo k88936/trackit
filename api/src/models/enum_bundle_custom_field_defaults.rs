@@ -18,8 +18,8 @@ pub struct EnumBundleCustomFieldDefaults {
     pub id: Option<String>,
     #[serde(rename = "canBeEmpty", skip_serializing_if = "Option::is_none")]
     pub can_be_empty: Option<bool>,
-    #[serde(rename = "emptyFieldText", skip_serializing_if = "Option::is_none")]
-    pub empty_field_text: Option<String>,
+    #[serde(rename = "emptyFieldText", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub empty_field_text: Option<Option<String>>,
     #[serde(rename = "isPublic", skip_serializing_if = "Option::is_none")]
     pub is_public: Option<bool>,
     #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]

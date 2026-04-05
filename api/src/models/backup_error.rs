@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// BackupError : Represents an error that appeared during the backup.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum BackupError {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BackupError {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "date", skip_serializing_if = "Option::is_none")]
+    pub date: Option<i64>,
+    #[serde(rename = "errorMessage", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub error_message: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl BackupError {
+    /// Represents an error that appeared during the backup.
+    pub fn new() -> BackupError {
+        BackupError {
+            id: None,
+            date: None,
+            error_message: None,
+            dollar_type: None,
+        }
+    }
+}
 

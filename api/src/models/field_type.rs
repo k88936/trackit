@@ -12,11 +12,21 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// FieldType : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum FieldType {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct FieldType {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl FieldType {
+    /// 
+    pub fn new() -> FieldType {
+        FieldType {
+            id: None,
+            dollar_type: None,
+        }
+    }
+}
 

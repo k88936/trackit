@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// RestCorsSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum RestCorsSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct RestCorsSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "allowedOrigins", skip_serializing_if = "Option::is_none")]
+    pub allowed_origins: Option<Vec<String>>,
+    #[serde(rename = "allowAllOrigins", skip_serializing_if = "Option::is_none")]
+    pub allow_all_origins: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl RestCorsSettings {
+    /// 
+    pub fn new() -> RestCorsSettings {
+        RestCorsSettings {
+            id: None,
+            allowed_origins: None,
+            allow_all_origins: None,
+            dollar_type: None,
+        }
+    }
+}
 

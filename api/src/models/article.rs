@@ -18,12 +18,12 @@ pub struct Article {
     pub id: Option<String>,
     #[serde(rename = "attachments", skip_serializing_if = "Option::is_none")]
     pub attachments: Option<Vec<models::ArticleAttachment>>,
-    #[serde(rename = "content", skip_serializing_if = "Option::is_none")]
-    pub content: Option<String>,
+    #[serde(rename = "content", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub content: Option<Option<String>>,
     #[serde(rename = "reporter", skip_serializing_if = "Option::is_none")]
     pub reporter: Option<Box<models::User>>,
-    #[serde(rename = "summary", skip_serializing_if = "Option::is_none")]
-    pub summary: Option<String>,
+    #[serde(rename = "summary", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub summary: Option<Option<String>>,
     #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
     pub visibility: Option<Box<models::Visibility>>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]

@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// GeneralUserProfile : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum GeneralUserProfile {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct GeneralUserProfile {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "dateFieldFormat", skip_serializing_if = "Option::is_none")]
+    pub date_field_format: Option<Box<models::DateFormatDescriptor>>,
+    #[serde(rename = "timezone", skip_serializing_if = "Option::is_none")]
+    pub timezone: Option<Box<models::TimeZoneDescriptor>>,
+    #[serde(rename = "locale", skip_serializing_if = "Option::is_none")]
+    pub locale: Option<Box<models::LocaleDescriptor>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl GeneralUserProfile {
+    /// 
+    pub fn new() -> GeneralUserProfile {
+        GeneralUserProfile {
+            id: None,
+            date_field_format: None,
+            timezone: None,
+            locale: None,
+            dollar_type: None,
+        }
+    }
+}
 

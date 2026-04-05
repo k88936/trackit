@@ -20,8 +20,8 @@ pub struct BuildBundleElement {
     pub name: Option<String>,
     #[serde(rename = "bundle", skip_serializing_if = "Option::is_none")]
     pub bundle: Option<Box<models::Bundle>>,
-    #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
     #[serde(rename = "archived", skip_serializing_if = "Option::is_none")]
     pub archived: Option<bool>,
     #[serde(rename = "ordinal", skip_serializing_if = "Option::is_none")]
@@ -32,8 +32,8 @@ pub struct BuildBundleElement {
     pub has_running_job: Option<bool>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub dollar_type: Option<String>,
-    #[serde(rename = "assembleDate", skip_serializing_if = "Option::is_none")]
-    pub assemble_date: Option<i64>,
+    #[serde(rename = "assembleDate", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub assemble_date: Option<Option<i64>>,
 }
 
 impl BuildBundleElement {

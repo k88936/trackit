@@ -12,11 +12,51 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Sprint : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Sprint {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Sprint {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "agile", skip_serializing_if = "Option::is_none")]
+    pub agile: Option<Box<models::Agile>>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "goal", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub goal: Option<Option<String>>,
+    #[serde(rename = "start", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub start: Option<Option<i64>>,
+    #[serde(rename = "finish", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub finish: Option<Option<i64>>,
+    #[serde(rename = "archived", skip_serializing_if = "Option::is_none")]
+    pub archived: Option<bool>,
+    #[serde(rename = "isDefault", skip_serializing_if = "Option::is_none")]
+    pub is_default: Option<bool>,
+    #[serde(rename = "issues", skip_serializing_if = "Option::is_none")]
+    pub issues: Option<Vec<models::Issue>>,
+    #[serde(rename = "unresolvedIssuesCount", skip_serializing_if = "Option::is_none")]
+    pub unresolved_issues_count: Option<i32>,
+    #[serde(rename = "previousSprint", skip_serializing_if = "Option::is_none")]
+    pub previous_sprint: Option<Box<models::Sprint>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Sprint {
+    /// 
+    pub fn new() -> Sprint {
+        Sprint {
+            id: None,
+            agile: None,
+            name: None,
+            goal: None,
+            start: None,
+            finish: None,
+            archived: None,
+            is_default: None,
+            issues: None,
+            unresolved_issues_count: None,
+            previous_sprint: None,
+            dollar_type: None,
+        }
+    }
+}
 

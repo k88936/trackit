@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ProjectColor : Represents color setting for one project on the board.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ProjectColor {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ProjectColor {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "project", skip_serializing_if = "Option::is_none")]
+    pub project: Option<Box<models::Project>>,
+    #[serde(rename = "color", skip_serializing_if = "Option::is_none")]
+    pub color: Option<Box<models::FieldStyle>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ProjectColor {
+    /// Represents color setting for one project on the board.
+    pub fn new() -> ProjectColor {
+        ProjectColor {
+            id: None,
+            project: None,
+            color: None,
+            dollar_type: None,
+        }
+    }
+}
 

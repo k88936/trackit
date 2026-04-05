@@ -12,11 +12,24 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Event : Represents a transition from one value to another for a custom field that is managed by a state-machine rule in workflow.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Event {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Event {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "presentation", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub presentation: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Event {
+    /// Represents a transition from one value to another for a custom field that is managed by a state-machine rule in workflow.
+    pub fn new() -> Event {
+        Event {
+            id: None,
+            presentation: None,
+            dollar_type: None,
+        }
+    }
+}
 

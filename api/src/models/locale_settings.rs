@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// LocaleSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum LocaleSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct LocaleSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "locale", skip_serializing_if = "Option::is_none")]
+    pub locale: Option<Box<models::LocaleDescriptor>>,
+    #[serde(rename = "isRTL", skip_serializing_if = "Option::is_none")]
+    pub is_rtl: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl LocaleSettings {
+    /// 
+    pub fn new() -> LocaleSettings {
+        LocaleSettings {
+            id: None,
+            locale: None,
+            is_rtl: None,
+            dollar_type: None,
+        }
+    }
+}
 

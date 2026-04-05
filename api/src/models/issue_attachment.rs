@@ -12,11 +12,72 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueAttachment : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueAttachment {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueAttachment {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "author", skip_serializing_if = "Option::is_none")]
+    pub author: Option<Box<models::User>>,
+    #[serde(rename = "created", skip_serializing_if = "Option::is_none")]
+    pub created: Option<i64>,
+    #[serde(rename = "updated", skip_serializing_if = "Option::is_none")]
+    pub updated: Option<i64>,
+    #[serde(rename = "size", skip_serializing_if = "Option::is_none")]
+    pub size: Option<i64>,
+    #[serde(rename = "extension", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub extension: Option<Option<String>>,
+    #[serde(rename = "charset", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub charset: Option<Option<String>>,
+    #[serde(rename = "mimeType", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub mime_type: Option<Option<String>>,
+    #[serde(rename = "metaData", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub meta_data: Option<Option<String>>,
+    #[serde(rename = "draft", skip_serializing_if = "Option::is_none")]
+    pub draft: Option<bool>,
+    #[serde(rename = "removed", skip_serializing_if = "Option::is_none")]
+    pub removed: Option<bool>,
+    #[serde(rename = "base64Content", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub base64_content: Option<Option<String>>,
+    #[serde(rename = "url", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub url: Option<Option<String>>,
+    #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<Box<models::Visibility>>,
+    #[serde(rename = "issue", skip_serializing_if = "Option::is_none")]
+    pub issue: Option<Box<models::Issue>>,
+    #[serde(rename = "comment", skip_serializing_if = "Option::is_none")]
+    pub comment: Option<Box<models::IssueComment>>,
+    #[serde(rename = "thumbnailURL", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub thumbnail_url: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueAttachment {
+    /// 
+    pub fn new() -> IssueAttachment {
+        IssueAttachment {
+            id: None,
+            name: None,
+            author: None,
+            created: None,
+            updated: None,
+            size: None,
+            extension: None,
+            charset: None,
+            mime_type: None,
+            meta_data: None,
+            draft: None,
+            removed: None,
+            base64_content: None,
+            url: None,
+            visibility: None,
+            issue: None,
+            comment: None,
+            thumbnail_url: None,
+            dollar_type: None,
+        }
+    }
+}
 

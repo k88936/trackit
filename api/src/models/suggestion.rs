@@ -12,11 +12,60 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Suggestion : Represents query suggestion.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Suggestion {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Suggestion {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "completionStart", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub completion_start: Option<Option<i32>>,
+    #[serde(rename = "completionEnd", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub completion_end: Option<Option<i32>>,
+    #[serde(rename = "matchingStart", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub matching_start: Option<Option<i32>>,
+    #[serde(rename = "matchingEnd", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub matching_end: Option<Option<i32>>,
+    #[serde(rename = "caret", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub caret: Option<Option<i32>>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
+    #[serde(rename = "option", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub option: Option<Option<String>>,
+    #[serde(rename = "prefix", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub prefix: Option<Option<String>>,
+    #[serde(rename = "suffix", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub suffix: Option<Option<String>>,
+    #[serde(rename = "group", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub group: Option<Option<String>>,
+    #[serde(rename = "icon", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub icon: Option<Option<String>>,
+    #[serde(rename = "auxiliaryIcon", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub auxiliary_icon: Option<Option<String>>,
+    #[serde(rename = "className", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub class_name: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Suggestion {
+    /// Represents query suggestion.
+    pub fn new() -> Suggestion {
+        Suggestion {
+            id: None,
+            completion_start: None,
+            completion_end: None,
+            matching_start: None,
+            matching_end: None,
+            caret: None,
+            description: None,
+            option: None,
+            prefix: None,
+            suffix: None,
+            group: None,
+            icon: None,
+            auxiliary_icon: None,
+            class_name: None,
+            dollar_type: None,
+        }
+    }
+}
 

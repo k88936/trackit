@@ -12,11 +12,24 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// NotificationSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum NotificationSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct NotificationSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "emailSettings", skip_serializing_if = "Option::is_none")]
+    pub email_settings: Option<Box<models::EmailSettings>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl NotificationSettings {
+    /// 
+    pub fn new() -> NotificationSettings {
+        NotificationSettings {
+            id: None,
+            email_settings: None,
+            dollar_type: None,
+        }
+    }
+}
 

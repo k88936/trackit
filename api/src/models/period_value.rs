@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// PeriodValue : Represents the period field value.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum PeriodValue {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct PeriodValue {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "minutes", skip_serializing_if = "Option::is_none")]
+    pub minutes: Option<i32>,
+    #[serde(rename = "presentation", skip_serializing_if = "Option::is_none")]
+    pub presentation: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl PeriodValue {
+    /// Represents the period field value.
+    pub fn new() -> PeriodValue {
+        PeriodValue {
+            id: None,
+            minutes: None,
+            presentation: None,
+            dollar_type: None,
+        }
+    }
+}
 

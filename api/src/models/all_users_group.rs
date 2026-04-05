@@ -18,16 +18,16 @@ pub struct AllUsersGroup {
     pub id: Option<String>,
     #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(rename = "ringId", skip_serializing_if = "Option::is_none")]
-    pub ring_id: Option<String>,
+    #[serde(rename = "ringId", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub ring_id: Option<Option<String>>,
     #[serde(rename = "usersCount", skip_serializing_if = "Option::is_none")]
     pub users_count: Option<i64>,
-    #[serde(rename = "icon", skip_serializing_if = "Option::is_none")]
-    pub icon: Option<String>,
+    #[serde(rename = "icon", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub icon: Option<Option<String>>,
     #[serde(rename = "allUsersGroup", skip_serializing_if = "Option::is_none")]
     pub all_users_group: Option<bool>,
-    #[serde(rename = "teamForProject", skip_serializing_if = "Option::is_none")]
-    pub team_for_project: Option<Box<models::Project>>,
+    #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+    pub users: Option<Vec<models::User>>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub dollar_type: Option<String>,
 }
@@ -42,7 +42,7 @@ impl AllUsersGroup {
             users_count: None,
             icon: None,
             all_users_group: None,
-            team_for_project: None,
+            users: None,
             dollar_type: None,
         }
     }

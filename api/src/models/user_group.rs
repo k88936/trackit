@@ -29,8 +29,8 @@ pub enum UserGroup {
         icon: Option<String>,
         #[serde(rename = "allUsersGroup", skip_serializing_if = "Option::is_none")]
         all_users_group: Option<bool>,
-        #[serde(rename = "teamForProject", skip_serializing_if = "Option::is_none")]
-        team_for_project: Option<Box<models::Project>>,
+        #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+        users: Option<Vec<models::User>>,
     },
     #[serde(rename="NestedGroup")]
     NestedGroup {
@@ -46,8 +46,8 @@ pub enum UserGroup {
         icon: Option<String>,
         #[serde(rename = "allUsersGroup", skip_serializing_if = "Option::is_none")]
         all_users_group: Option<bool>,
-        #[serde(rename = "teamForProject", skip_serializing_if = "Option::is_none")]
-        team_for_project: Option<Box<models::Project>>,
+        #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+        users: Option<Vec<models::User>>,
     },
     #[serde(rename="ProjectTeam")]
     ProjectTeam {
@@ -63,8 +63,8 @@ pub enum UserGroup {
         icon: Option<String>,
         #[serde(rename = "allUsersGroup", skip_serializing_if = "Option::is_none")]
         all_users_group: Option<bool>,
-        #[serde(rename = "teamForProject", skip_serializing_if = "Option::is_none")]
-        team_for_project: Option<Box<models::Project>>,
+        #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+        users: Option<Vec<models::User>>,
     },
     #[serde(rename="RegisteredUsersGroup")]
     RegisteredUsersGroup {
@@ -80,8 +80,8 @@ pub enum UserGroup {
         icon: Option<String>,
         #[serde(rename = "allUsersGroup", skip_serializing_if = "Option::is_none")]
         all_users_group: Option<bool>,
-        #[serde(rename = "teamForProject", skip_serializing_if = "Option::is_none")]
-        team_for_project: Option<Box<models::Project>>,
+        #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+        users: Option<Vec<models::User>>,
     },
     #[serde(rename="UserGroup")]
     UserGroup {
@@ -97,8 +97,8 @@ pub enum UserGroup {
         icon: Option<String>,
         #[serde(rename = "allUsersGroup", skip_serializing_if = "Option::is_none")]
         all_users_group: Option<bool>,
-        #[serde(rename = "teamForProject", skip_serializing_if = "Option::is_none")]
-        team_for_project: Option<Box<models::Project>>,
+        #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+        users: Option<Vec<models::User>>,
     },
 }
 
@@ -111,7 +111,7 @@ impl Default for UserGroup {
             users_count: Default::default(),
             icon: Default::default(),
             all_users_group: Default::default(),
-            team_for_project: Default::default(),
+            users: Default::default(),
         }
         
     }

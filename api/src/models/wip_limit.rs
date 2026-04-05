@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// WipLimit : Represents WIP limits for particular column. If they are not satisfied, the column will be highlighted in UI.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum WipLimit {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct WipLimit {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "max", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub max: Option<Option<i32>>,
+    #[serde(rename = "min", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub min: Option<Option<i32>>,
+    #[serde(rename = "column", skip_serializing_if = "Option::is_none")]
+    pub column: Option<Box<models::AgileColumn>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl WipLimit {
+    /// Represents WIP limits for particular column. If they are not satisfied, the column will be highlighted in UI.
+    pub fn new() -> WipLimit {
+        WipLimit {
+            id: None,
+            max: None,
+            min: None,
+            column: None,
+            dollar_type: None,
+        }
+    }
+}
 

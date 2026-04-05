@@ -12,11 +12,24 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// TimeTrackingUserProfile : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum TimeTrackingUserProfile {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct TimeTrackingUserProfile {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "periodFormat", skip_serializing_if = "Option::is_none")]
+    pub period_format: Option<Box<models::PeriodFieldFormat>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl TimeTrackingUserProfile {
+    /// 
+    pub fn new() -> TimeTrackingUserProfile {
+        TimeTrackingUserProfile {
+            id: None,
+            period_format: None,
+            dollar_type: None,
+        }
+    }
+}
 

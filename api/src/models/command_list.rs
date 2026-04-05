@@ -12,11 +12,48 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// CommandList : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum CommandList {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct CommandList {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "comment", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub comment: Option<Option<String>>,
+    #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<Box<models::CommandVisibility>>,
+    #[serde(rename = "query", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub query: Option<Option<String>>,
+    #[serde(rename = "caret", skip_serializing_if = "Option::is_none")]
+    pub caret: Option<i32>,
+    #[serde(rename = "silent", skip_serializing_if = "Option::is_none")]
+    pub silent: Option<bool>,
+    #[serde(rename = "runAs", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub run_as: Option<Option<String>>,
+    #[serde(rename = "commands", skip_serializing_if = "Option::is_none")]
+    pub commands: Option<Vec<models::ParsedCommand>>,
+    #[serde(rename = "issues", skip_serializing_if = "Option::is_none")]
+    pub issues: Option<Vec<models::Issue>>,
+    #[serde(rename = "suggestions", skip_serializing_if = "Option::is_none")]
+    pub suggestions: Option<Vec<models::Suggestion>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl CommandList {
+    /// 
+    pub fn new() -> CommandList {
+        CommandList {
+            id: None,
+            comment: None,
+            visibility: None,
+            query: None,
+            caret: None,
+            silent: None,
+            run_as: None,
+            commands: None,
+            issues: None,
+            suggestions: None,
+            dollar_type: None,
+        }
+    }
+}
 

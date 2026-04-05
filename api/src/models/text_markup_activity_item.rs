@@ -16,26 +16,26 @@ use serde::{Deserialize, Serialize};
 pub struct TextMarkupActivityItem {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
-    #[serde(rename = "added", skip_serializing_if = "Option::is_none")]
-    pub added: Option<String>,
+    #[serde(rename = "added", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub added: Option<Option<String>>,
     #[serde(rename = "author", skip_serializing_if = "Option::is_none")]
     pub author: Option<Box<models::User>>,
     #[serde(rename = "category", skip_serializing_if = "Option::is_none")]
     pub category: Option<Box<models::ActivityCategory>>,
     #[serde(rename = "field", skip_serializing_if = "Option::is_none")]
     pub field: Option<Box<models::FilterField>>,
-    #[serde(rename = "removed", skip_serializing_if = "Option::is_none")]
-    pub removed: Option<String>,
+    #[serde(rename = "removed", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub removed: Option<Option<String>>,
     #[serde(rename = "target", skip_serializing_if = "Option::is_none")]
     pub target: Option<serde_json::Value>,
-    #[serde(rename = "targetMember", skip_serializing_if = "Option::is_none")]
-    pub target_member: Option<String>,
+    #[serde(rename = "targetMember", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub target_member: Option<Option<String>>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub dollar_type: Option<String>,
-    #[serde(rename = "markup", skip_serializing_if = "Option::is_none")]
-    pub markup: Option<String>,
+    #[serde(rename = "markup", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub markup: Option<Option<String>>,
 }
 
 impl TextMarkupActivityItem {

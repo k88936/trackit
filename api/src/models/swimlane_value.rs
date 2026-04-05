@@ -12,11 +12,24 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// SwimlaneValue : Represents single swimlane in case of IssueBasedSwimlaneSettings.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum SwimlaneValue {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct SwimlaneValue {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub name: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl SwimlaneValue {
+    /// Represents single swimlane in case of IssueBasedSwimlaneSettings.
+    pub fn new() -> SwimlaneValue {
+        SwimlaneValue {
+            id: None,
+            name: None,
+            dollar_type: None,
+        }
+    }
+}
 

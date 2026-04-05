@@ -12,11 +12,33 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// BackupFile : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum BackupFile {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BackupFile {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "size", skip_serializing_if = "Option::is_none")]
+    pub size: Option<i64>,
+    #[serde(rename = "creationDate", skip_serializing_if = "Option::is_none")]
+    pub creation_date: Option<i64>,
+    #[serde(rename = "link", skip_serializing_if = "Option::is_none")]
+    pub link: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl BackupFile {
+    /// 
+    pub fn new() -> BackupFile {
+        BackupFile {
+            id: None,
+            name: None,
+            size: None,
+            creation_date: None,
+            link: None,
+            dollar_type: None,
+        }
+    }
+}
 

@@ -12,11 +12,39 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// GlobalSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum GlobalSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct GlobalSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "systemSettings", skip_serializing_if = "Option::is_none")]
+    pub system_settings: Option<Box<models::SystemSettings>>,
+    #[serde(rename = "notificationSettings", skip_serializing_if = "Option::is_none")]
+    pub notification_settings: Option<Box<models::NotificationSettings>>,
+    #[serde(rename = "restSettings", skip_serializing_if = "Option::is_none")]
+    pub rest_settings: Option<Box<models::RestCorsSettings>>,
+    #[serde(rename = "appearanceSettings", skip_serializing_if = "Option::is_none")]
+    pub appearance_settings: Option<Box<models::AppearanceSettings>>,
+    #[serde(rename = "localeSettings", skip_serializing_if = "Option::is_none")]
+    pub locale_settings: Option<Box<models::LocaleSettings>>,
+    #[serde(rename = "license", skip_serializing_if = "Option::is_none")]
+    pub license: Option<Box<models::License>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl GlobalSettings {
+    /// 
+    pub fn new() -> GlobalSettings {
+        GlobalSettings {
+            id: None,
+            system_settings: None,
+            notification_settings: None,
+            rest_settings: None,
+            appearance_settings: None,
+            locale_settings: None,
+            license: None,
+            dollar_type: None,
+        }
+    }
+}
 

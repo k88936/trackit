@@ -12,13 +12,35 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueLink : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueLink {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueLink {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "direction", skip_serializing_if = "Option::is_none")]
+    pub direction: Option<Direction>,
+    #[serde(rename = "linkType", skip_serializing_if = "Option::is_none")]
+    pub link_type: Option<Box<models::IssueLinkType>>,
+    #[serde(rename = "issues", skip_serializing_if = "Option::is_none")]
+    pub issues: Option<Vec<models::Issue>>,
+    #[serde(rename = "trimmedIssues", skip_serializing_if = "Option::is_none")]
+    pub trimmed_issues: Option<Vec<models::Issue>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueLink {
+    /// 
+    pub fn new() -> IssueLink {
+        IssueLink {
+            id: None,
+            direction: None,
+            link_type: None,
+            issues: None,
+            trimmed_issues: None,
+            dollar_type: None,
+        }
+    }
+}
 /// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum Direction {

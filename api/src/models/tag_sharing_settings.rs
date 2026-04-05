@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// TagSharingSettings : Stores users and groups that have access to a tag.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum TagSharingSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct TagSharingSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "permittedGroups", skip_serializing_if = "Option::is_none")]
+    pub permitted_groups: Option<Vec<models::UserGroup>>,
+    #[serde(rename = "permittedUsers", skip_serializing_if = "Option::is_none")]
+    pub permitted_users: Option<Vec<models::User>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl TagSharingSettings {
+    /// Stores users and groups that have access to a tag.
+    pub fn new() -> TagSharingSettings {
+        TagSharingSettings {
+            id: None,
+            permitted_groups: None,
+            permitted_users: None,
+            dollar_type: None,
+        }
+    }
+}
 

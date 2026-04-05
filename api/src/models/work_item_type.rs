@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// WorkItemType : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum WorkItemType {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct WorkItemType {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "autoAttached", skip_serializing_if = "Option::is_none")]
+    pub auto_attached: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl WorkItemType {
+    /// 
+    pub fn new() -> WorkItemType {
+        WorkItemType {
+            id: None,
+            name: None,
+            auto_attached: None,
+            dollar_type: None,
+        }
+    }
+}
 

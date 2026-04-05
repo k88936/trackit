@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueWatchers : Represents users that are subscribed to notifications about the issue.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueWatchers {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueWatchers {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "hasStar", skip_serializing_if = "Option::is_none")]
+    pub has_star: Option<bool>,
+    #[serde(rename = "issueWatchers", skip_serializing_if = "Option::is_none")]
+    pub issue_watchers: Option<Vec<models::IssueWatcher>>,
+    #[serde(rename = "duplicateWatchers", skip_serializing_if = "Option::is_none")]
+    pub duplicate_watchers: Option<Vec<models::IssueWatcher>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueWatchers {
+    /// Represents users that are subscribed to notifications about the issue.
+    pub fn new() -> IssueWatchers {
+        IssueWatchers {
+            id: None,
+            has_star: None,
+            issue_watchers: None,
+            duplicate_watchers: None,
+            dollar_type: None,
+        }
+    }
+}
 

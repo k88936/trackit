@@ -12,11 +12,48 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ArticleComment : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ArticleComment {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ArticleComment {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "article", skip_serializing_if = "Option::is_none")]
+    pub article: Option<Box<models::Article>>,
+    #[serde(rename = "attachments", skip_serializing_if = "Option::is_none")]
+    pub attachments: Option<Vec<models::ArticleAttachment>>,
+    #[serde(rename = "author", skip_serializing_if = "Option::is_none")]
+    pub author: Option<Box<models::User>>,
+    #[serde(rename = "created", skip_serializing_if = "Option::is_none")]
+    pub created: Option<i64>,
+    #[serde(rename = "pinned", skip_serializing_if = "Option::is_none")]
+    pub pinned: Option<bool>,
+    #[serde(rename = "reactions", skip_serializing_if = "Option::is_none")]
+    pub reactions: Option<Vec<models::Reaction>>,
+    #[serde(rename = "text", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub text: Option<Option<String>>,
+    #[serde(rename = "updated", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub updated: Option<Option<i64>>,
+    #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<Box<models::Visibility>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ArticleComment {
+    /// 
+    pub fn new() -> ArticleComment {
+        ArticleComment {
+            id: None,
+            article: None,
+            attachments: None,
+            author: None,
+            created: None,
+            pinned: None,
+            reactions: None,
+            text: None,
+            updated: None,
+            visibility: None,
+            dollar_type: None,
+        }
+    }
+}
 

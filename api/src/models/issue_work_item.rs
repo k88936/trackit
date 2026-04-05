@@ -22,16 +22,16 @@ pub struct IssueWorkItem {
     pub author: Option<Box<models::User>>,
     #[serde(rename = "creator", skip_serializing_if = "Option::is_none")]
     pub creator: Option<Box<models::User>>,
-    #[serde(rename = "text", skip_serializing_if = "Option::is_none")]
-    pub text: Option<String>,
+    #[serde(rename = "text", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub text: Option<Option<String>>,
     #[serde(rename = "textPreview", skip_serializing_if = "Option::is_none")]
     pub text_preview: Option<String>,
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<Box<models::WorkItemType>>,
     #[serde(rename = "created", skip_serializing_if = "Option::is_none")]
     pub created: Option<i64>,
-    #[serde(rename = "updated", skip_serializing_if = "Option::is_none")]
-    pub updated: Option<i64>,
+    #[serde(rename = "updated", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub updated: Option<Option<i64>>,
     #[serde(rename = "duration", skip_serializing_if = "Option::is_none")]
     pub duration: Option<Box<models::DurationValue>>,
     #[serde(rename = "date", skip_serializing_if = "Option::is_none")]

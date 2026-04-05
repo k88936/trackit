@@ -12,11 +12,48 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueLinkType : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueLinkType {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueLinkType {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "localizedName", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub localized_name: Option<Option<String>>,
+    #[serde(rename = "sourceToTarget", skip_serializing_if = "Option::is_none")]
+    pub source_to_target: Option<String>,
+    #[serde(rename = "localizedSourceToTarget", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub localized_source_to_target: Option<Option<String>>,
+    #[serde(rename = "targetToSource", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub target_to_source: Option<Option<String>>,
+    #[serde(rename = "localizedTargetToSource", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub localized_target_to_source: Option<Option<String>>,
+    #[serde(rename = "directed", skip_serializing_if = "Option::is_none")]
+    pub directed: Option<bool>,
+    #[serde(rename = "aggregation", skip_serializing_if = "Option::is_none")]
+    pub aggregation: Option<bool>,
+    #[serde(rename = "readOnly", skip_serializing_if = "Option::is_none")]
+    pub read_only: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueLinkType {
+    /// 
+    pub fn new() -> IssueLinkType {
+        IssueLinkType {
+            id: None,
+            name: None,
+            localized_name: None,
+            source_to_target: None,
+            localized_source_to_target: None,
+            target_to_source: None,
+            localized_target_to_source: None,
+            directed: None,
+            aggregation: None,
+            read_only: None,
+            dollar_type: None,
+        }
+    }
+}
 

@@ -12,11 +12,54 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// CustomField : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum CustomField {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct CustomField {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "localizedName", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub localized_name: Option<Option<String>>,
+    #[serde(rename = "fieldType", skip_serializing_if = "Option::is_none")]
+    pub field_type: Option<Box<models::FieldType>>,
+    #[serde(rename = "isAutoAttached", skip_serializing_if = "Option::is_none")]
+    pub is_auto_attached: Option<bool>,
+    #[serde(rename = "isDisplayedInIssueList", skip_serializing_if = "Option::is_none")]
+    pub is_displayed_in_issue_list: Option<bool>,
+    #[serde(rename = "ordinal", skip_serializing_if = "Option::is_none")]
+    pub ordinal: Option<i32>,
+    #[serde(rename = "aliases", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub aliases: Option<Option<String>>,
+    #[serde(rename = "fieldDefaults", skip_serializing_if = "Option::is_none")]
+    pub field_defaults: Option<Box<models::CustomFieldDefaults>>,
+    #[serde(rename = "hasRunningJob", skip_serializing_if = "Option::is_none")]
+    pub has_running_job: Option<bool>,
+    #[serde(rename = "isUpdateable", skip_serializing_if = "Option::is_none")]
+    pub is_updateable: Option<bool>,
+    #[serde(rename = "instances", skip_serializing_if = "Option::is_none")]
+    pub instances: Option<Vec<models::ProjectCustomField>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl CustomField {
+    /// 
+    pub fn new() -> CustomField {
+        CustomField {
+            id: None,
+            name: None,
+            localized_name: None,
+            field_type: None,
+            is_auto_attached: None,
+            is_displayed_in_issue_list: None,
+            ordinal: None,
+            aliases: None,
+            field_defaults: None,
+            has_running_job: None,
+            is_updateable: None,
+            instances: None,
+            dollar_type: None,
+        }
+    }
+}
 

@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// TextFieldValue : Represents a value of the text field. Returns both source and rendered text.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum TextFieldValue {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct TextFieldValue {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "text", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub text: Option<Option<String>>,
+    #[serde(rename = "markdownText", skip_serializing_if = "Option::is_none")]
+    pub markdown_text: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl TextFieldValue {
+    /// Represents a value of the text field. Returns both source and rendered text.
+    pub fn new() -> TextFieldValue {
+        TextFieldValue {
+            id: None,
+            text: None,
+            markdown_text: None,
+            dollar_type: None,
+        }
+    }
+}
 

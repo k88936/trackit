@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ParsedCommand : Represents the command that was parsed from the provided query.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ParsedCommand {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ParsedCommand {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
+    #[serde(rename = "error", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub error: Option<Option<bool>>,
+    #[serde(rename = "delete", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub delete: Option<Option<bool>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ParsedCommand {
+    /// Represents the command that was parsed from the provided query.
+    pub fn new() -> ParsedCommand {
+        ParsedCommand {
+            id: None,
+            description: None,
+            error: None,
+            delete: None,
+            dollar_type: None,
+        }
+    }
+}
 

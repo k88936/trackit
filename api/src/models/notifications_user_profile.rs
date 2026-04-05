@@ -12,11 +12,51 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// NotificationsUserProfile : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum NotificationsUserProfile {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct NotificationsUserProfile {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "notifyOnOwnChanges", skip_serializing_if = "Option::is_none")]
+    pub notify_on_own_changes: Option<bool>,
+    #[serde(rename = "emailNotificationsEnabled", skip_serializing_if = "Option::is_none")]
+    pub email_notifications_enabled: Option<bool>,
+    #[serde(rename = "mentionNotificationsEnabled", skip_serializing_if = "Option::is_none")]
+    pub mention_notifications_enabled: Option<bool>,
+    #[serde(rename = "duplicateClusterNotificationsEnabled", skip_serializing_if = "Option::is_none")]
+    pub duplicate_cluster_notifications_enabled: Option<bool>,
+    #[serde(rename = "mailboxIntegrationNotificationsEnabled", skip_serializing_if = "Option::is_none")]
+    pub mailbox_integration_notifications_enabled: Option<bool>,
+    #[serde(rename = "usePlainTextEmails", skip_serializing_if = "Option::is_none")]
+    pub use_plain_text_emails: Option<bool>,
+    #[serde(rename = "autoWatchOnComment", skip_serializing_if = "Option::is_none")]
+    pub auto_watch_on_comment: Option<bool>,
+    #[serde(rename = "autoWatchOnCreate", skip_serializing_if = "Option::is_none")]
+    pub auto_watch_on_create: Option<bool>,
+    #[serde(rename = "autoWatchOnVote", skip_serializing_if = "Option::is_none")]
+    pub auto_watch_on_vote: Option<bool>,
+    #[serde(rename = "autoWatchOnUpdate", skip_serializing_if = "Option::is_none")]
+    pub auto_watch_on_update: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl NotificationsUserProfile {
+    /// 
+    pub fn new() -> NotificationsUserProfile {
+        NotificationsUserProfile {
+            id: None,
+            notify_on_own_changes: None,
+            email_notifications_enabled: None,
+            mention_notifications_enabled: None,
+            duplicate_cluster_notifications_enabled: None,
+            mailbox_integration_notifications_enabled: None,
+            use_plain_text_emails: None,
+            auto_watch_on_comment: None,
+            auto_watch_on_create: None,
+            auto_watch_on_vote: None,
+            auto_watch_on_update: None,
+            dollar_type: None,
+        }
+    }
+}
 

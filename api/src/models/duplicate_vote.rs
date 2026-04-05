@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// DuplicateVote : Represents a vote for duplicates of the issue.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum DuplicateVote {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DuplicateVote {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "issue", skip_serializing_if = "Option::is_none")]
+    pub issue: Option<Box<models::Issue>>,
+    #[serde(rename = "user", skip_serializing_if = "Option::is_none")]
+    pub user: Option<Box<models::User>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl DuplicateVote {
+    /// Represents a vote for duplicates of the issue.
+    pub fn new() -> DuplicateVote {
+        DuplicateVote {
+            id: None,
+            issue: None,
+            user: None,
+            dollar_type: None,
+        }
+    }
+}
 

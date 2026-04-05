@@ -20,8 +20,8 @@ pub struct OwnedBundleElement {
     pub name: Option<String>,
     #[serde(rename = "bundle", skip_serializing_if = "Option::is_none")]
     pub bundle: Option<Box<models::Bundle>>,
-    #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
     #[serde(rename = "archived", skip_serializing_if = "Option::is_none")]
     pub archived: Option<bool>,
     #[serde(rename = "ordinal", skip_serializing_if = "Option::is_none")]

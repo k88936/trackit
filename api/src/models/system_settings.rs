@@ -12,11 +12,39 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// SystemSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum SystemSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct SystemSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "baseUrl", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub base_url: Option<Option<String>>,
+    #[serde(rename = "maxUploadFileSize", skip_serializing_if = "Option::is_none")]
+    pub max_upload_file_size: Option<i64>,
+    #[serde(rename = "maxExportItems", skip_serializing_if = "Option::is_none")]
+    pub max_export_items: Option<i32>,
+    #[serde(rename = "administratorEmail", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub administrator_email: Option<Option<String>>,
+    #[serde(rename = "allowStatisticsCollection", skip_serializing_if = "Option::is_none")]
+    pub allow_statistics_collection: Option<bool>,
+    #[serde(rename = "isApplicationReadOnly", skip_serializing_if = "Option::is_none")]
+    pub is_application_read_only: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl SystemSettings {
+    /// 
+    pub fn new() -> SystemSettings {
+        SystemSettings {
+            id: None,
+            base_url: None,
+            max_upload_file_size: None,
+            max_export_items: None,
+            administrator_email: None,
+            allow_statistics_collection: None,
+            is_application_read_only: None,
+            dollar_type: None,
+        }
+    }
+}
 

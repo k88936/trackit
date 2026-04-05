@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueKey : Stores information about a project where the issue belongs or previously belonged. This entity appears as part of the ProjectActivityItem object.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueKey {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueKey {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "project", skip_serializing_if = "Option::is_none")]
+    pub project: Option<Box<models::Project>>,
+    #[serde(rename = "numberInProject", skip_serializing_if = "Option::is_none")]
+    pub number_in_project: Option<i64>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueKey {
+    /// Stores information about a project where the issue belongs or previously belonged. This entity appears as part of the ProjectActivityItem object.
+    pub fn new() -> IssueKey {
+        IssueKey {
+            id: None,
+            project: None,
+            number_in_project: None,
+            dollar_type: None,
+        }
+    }
+}
 

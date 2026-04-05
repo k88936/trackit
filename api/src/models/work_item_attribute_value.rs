@@ -12,11 +12,33 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// WorkItemAttributeValue : Represents a value of a work item attribute.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum WorkItemAttributeValue {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct WorkItemAttributeValue {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
+    #[serde(rename = "autoAttach", skip_serializing_if = "Option::is_none")]
+    pub auto_attach: Option<bool>,
+    #[serde(rename = "prototype", skip_serializing_if = "Option::is_none")]
+    pub prototype: Option<Box<models::WorkItemAttributePrototype>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl WorkItemAttributeValue {
+    /// Represents a value of a work item attribute.
+    pub fn new() -> WorkItemAttributeValue {
+        WorkItemAttributeValue {
+            id: None,
+            name: None,
+            description: None,
+            auto_attach: None,
+            prototype: None,
+            dollar_type: None,
+        }
+    }
+}
 

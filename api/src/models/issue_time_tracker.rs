@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueTimeTracker : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueTimeTracker {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueTimeTracker {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "workItems", skip_serializing_if = "Option::is_none")]
+    pub work_items: Option<Vec<models::IssueWorkItem>>,
+    #[serde(rename = "enabled", skip_serializing_if = "Option::is_none")]
+    pub enabled: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueTimeTracker {
+    /// 
+    pub fn new() -> IssueTimeTracker {
+        IssueTimeTracker {
+            id: None,
+            work_items: None,
+            enabled: None,
+            dollar_type: None,
+        }
+    }
+}
 

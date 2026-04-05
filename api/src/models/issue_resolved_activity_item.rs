@@ -16,20 +16,20 @@ use serde::{Deserialize, Serialize};
 pub struct IssueResolvedActivityItem {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
-    #[serde(rename = "added", skip_serializing_if = "Option::is_none")]
-    pub added: Option<i64>,
+    #[serde(rename = "added", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub added: Option<Option<i64>>,
     #[serde(rename = "author", skip_serializing_if = "Option::is_none")]
     pub author: Option<Box<models::User>>,
     #[serde(rename = "category", skip_serializing_if = "Option::is_none")]
     pub category: Option<Box<models::ActivityCategory>>,
     #[serde(rename = "field", skip_serializing_if = "Option::is_none")]
     pub field: Option<Box<models::FilterField>>,
-    #[serde(rename = "removed", skip_serializing_if = "Option::is_none")]
-    pub removed: Option<i64>,
+    #[serde(rename = "removed", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub removed: Option<Option<i64>>,
     #[serde(rename = "target", skip_serializing_if = "Option::is_none")]
     pub target: Option<serde_json::Value>,
-    #[serde(rename = "targetMember", skip_serializing_if = "Option::is_none")]
-    pub target_member: Option<String>,
+    #[serde(rename = "targetMember", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub target_member: Option<Option<String>>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]

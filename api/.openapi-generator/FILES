@@ -1,8 +1,8 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 Cargo.toml
 README.md
+docs/AccessScope.md
 docs/ActivityCategory.md
 docs/ActivityCursorPage.md
 docs/ActivityItem.md
@@ -16,6 +16,7 @@ docs/AppearanceSettings.md
 docs/Article.md
 docs/ArticleAttachment.md
 docs/ArticleComment.md
+docs/AssignedRole.md
 docs/AttachmentActivityItem.md
 docs/AttributeBasedSwimlaneSettings.md
 docs/BackupError.md
@@ -80,6 +81,7 @@ docs/GitLabChangesProcessor.md
 docs/GitLabServer.md
 docs/GiteaChangesProcessor.md
 docs/GiteaServer.md
+docs/GlobalScope.md
 docs/GlobalSettings.md
 docs/GlobalTimeTrackingSettings.md
 docs/GogsChangesProcessor.md
@@ -124,6 +126,8 @@ docs/NestedGroup.md
 docs/NotificationSettings.md
 docs/NotificationsUserProfile.md
 docs/OnlineUsers.md
+docs/Organization.md
+docs/OrganizationScope.md
 docs/OwnedBundle.md
 docs/OwnedBundleCustomFieldDefaults.md
 docs/OwnedBundleElement.md
@@ -133,17 +137,20 @@ docs/PeriodFieldFormat.md
 docs/PeriodIssueCustomField.md
 docs/PeriodProjectCustomField.md
 docs/PeriodValue.md
+docs/Permission.md
 docs/PredefinedFilterField.md
 docs/Project.md
 docs/ProjectActivityItem.md
 docs/ProjectBasedColorCoding.md
 docs/ProjectColor.md
 docs/ProjectCustomField.md
+docs/ProjectScope.md
 docs/ProjectTeam.md
 docs/ProjectTimeTrackingSettings.md
 docs/Reaction.md
 docs/RegisteredUsersGroup.md
 docs/RestCorsSettings.md
+docs/Role.md
 docs/SavedQuery.md
 docs/SearchSuggestions.md
 docs/SimpleIssueCustomField.md
@@ -193,6 +200,7 @@ docs/UserCustomFieldDefaults.md
 docs/UserGroup.md
 docs/UserProfiles.md
 docs/UserProjectCustomField.md
+docs/UserType.md
 docs/UsesMarkupActivityItem.md
 docs/VcsChange.md
 docs/VcsChangeActivityItem.md
@@ -227,6 +235,7 @@ src/apis/configuration.rs
 src/apis/default_api.rs
 src/apis/mod.rs
 src/lib.rs
+src/models/access_scope.rs
 src/models/activity_category.rs
 src/models/activity_cursor_page.rs
 src/models/activity_item.rs
@@ -240,6 +249,7 @@ src/models/appearance_settings.rs
 src/models/article.rs
 src/models/article_attachment.rs
 src/models/article_comment.rs
+src/models/assigned_role.rs
 src/models/attachment_activity_item.rs
 src/models/attribute_based_swimlane_settings.rs
 src/models/backup_error.rs
@@ -303,6 +313,7 @@ src/models/git_lab_changes_processor.rs
 src/models/git_lab_server.rs
 src/models/gitea_changes_processor.rs
 src/models/gitea_server.rs
+src/models/global_scope.rs
 src/models/global_settings.rs
 src/models/global_time_tracking_settings.rs
 src/models/gogs_changes_processor.rs
@@ -348,6 +359,8 @@ src/models/nested_group.rs
 src/models/notification_settings.rs
 src/models/notifications_user_profile.rs
 src/models/online_users.rs
+src/models/organization.rs
+src/models/organization_scope.rs
 src/models/owned_bundle.rs
 src/models/owned_bundle_custom_field_defaults.rs
 src/models/owned_bundle_element.rs
@@ -357,17 +370,20 @@ src/models/period_field_format.rs
 src/models/period_issue_custom_field.rs
 src/models/period_project_custom_field.rs
 src/models/period_value.rs
+src/models/permission.rs
 src/models/predefined_filter_field.rs
 src/models/project.rs
 src/models/project_activity_item.rs
 src/models/project_based_color_coding.rs
 src/models/project_color.rs
 src/models/project_custom_field.rs
+src/models/project_scope.rs
 src/models/project_team.rs
 src/models/project_time_tracking_settings.rs
 src/models/reaction.rs
 src/models/registered_users_group.rs
 src/models/rest_cors_settings.rs
+src/models/role.rs
 src/models/saved_query.rs
 src/models/search_suggestions.rs
 src/models/simple_issue_custom_field.rs
@@ -417,6 +433,7 @@ src/models/user_custom_field_defaults.rs
 src/models/user_group.rs
 src/models/user_profiles.rs
 src/models/user_project_custom_field.rs
+src/models/user_type.rs
 src/models/uses_markup_activity_item.rs
 src/models/vcs_change.rs
 src/models/vcs_change_activity_item.rs

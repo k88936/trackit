@@ -99,6 +99,11 @@ Method | HTTP request | Description
 [**admin_global_settings_rest_settings_post**](DefaultApi.md#admin_global_settings_rest_settings_post) | **POST** /admin/globalSettings/restSettings | 
 [**admin_global_settings_system_settings_get**](DefaultApi.md#admin_global_settings_system_settings_get) | **GET** /admin/globalSettings/systemSettings | 
 [**admin_global_settings_system_settings_post**](DefaultApi.md#admin_global_settings_system_settings_post) | **POST** /admin/globalSettings/systemSettings | 
+[**admin_organizations_get**](DefaultApi.md#admin_organizations_get) | **GET** /admin/organizations | 
+[**admin_organizations_id_delete**](DefaultApi.md#admin_organizations_id_delete) | **DELETE** /admin/organizations/{id} | 
+[**admin_organizations_id_get**](DefaultApi.md#admin_organizations_id_get) | **GET** /admin/organizations/{id} | 
+[**admin_organizations_id_post**](DefaultApi.md#admin_organizations_id_post) | **POST** /admin/organizations/{id} | 
+[**admin_organizations_post**](DefaultApi.md#admin_organizations_post) | **POST** /admin/organizations | 
 [**admin_projects_get**](DefaultApi.md#admin_projects_get) | **GET** /admin/projects | 
 [**admin_projects_id_articles_get**](DefaultApi.md#admin_projects_id_articles_get) | **GET** /admin/projects/{id}/articles | 
 [**admin_projects_id_custom_fields_get**](DefaultApi.md#admin_projects_id_custom_fields_get) | **GET** /admin/projects/{id}/customFields | 
@@ -169,10 +174,21 @@ Method | HTTP request | Description
 [**articles_id_tags_tag_id_delete**](DefaultApi.md#articles_id_tags_tag_id_delete) | **DELETE** /articles/{id}/tags/{tagId} | 
 [**articles_id_tags_tag_id_get**](DefaultApi.md#articles_id_tags_tag_id_get) | **GET** /articles/{id}/tags/{tagId} | 
 [**articles_post**](DefaultApi.md#articles_post) | **POST** /articles | 
+[**assigned_roles_get**](DefaultApi.md#assigned_roles_get) | **GET** /assignedRoles | 
+[**assigned_roles_id_delete**](DefaultApi.md#assigned_roles_id_delete) | **DELETE** /assignedRoles/{id} | 
+[**assigned_roles_id_get**](DefaultApi.md#assigned_roles_id_get) | **GET** /assignedRoles/{id} | 
+[**assigned_roles_id_post**](DefaultApi.md#assigned_roles_id_post) | **POST** /assignedRoles/{id} | 
 [**commands_assist_post**](DefaultApi.md#commands_assist_post) | **POST** /commands/assist | 
 [**commands_post**](DefaultApi.md#commands_post) | **POST** /commands | 
 [**groups_get**](DefaultApi.md#groups_get) | **GET** /groups | 
+[**groups_id_delete**](DefaultApi.md#groups_id_delete) | **DELETE** /groups/{id} | 
 [**groups_id_get**](DefaultApi.md#groups_id_get) | **GET** /groups/{id} | 
+[**groups_id_own_users_get**](DefaultApi.md#groups_id_own_users_get) | **GET** /groups/{id}/ownUsers | 
+[**groups_id_own_users_user_id_post**](DefaultApi.md#groups_id_own_users_user_id_post) | **POST** /groups/{id}/ownUsers/{userId} | 
+[**groups_id_post**](DefaultApi.md#groups_id_post) | **POST** /groups/{id} | 
+[**groups_id_sub_groups_get**](DefaultApi.md#groups_id_sub_groups_get) | **GET** /groups/{id}/subGroups | 
+[**groups_id_users_get**](DefaultApi.md#groups_id_users_get) | **GET** /groups/{id}/users | 
+[**groups_post**](DefaultApi.md#groups_post) | **POST** /groups | 
 [**issue_link_types_get**](DefaultApi.md#issue_link_types_get) | **GET** /issueLinkTypes | 
 [**issue_link_types_id_delete**](DefaultApi.md#issue_link_types_id_delete) | **DELETE** /issueLinkTypes/{id} | 
 [**issue_link_types_id_get**](DefaultApi.md#issue_link_types_id_get) | **GET** /issueLinkTypes/{id} | 
@@ -227,6 +243,12 @@ Method | HTTP request | Description
 [**issues_id_vcs_changes_vcs_change_id_get**](DefaultApi.md#issues_id_vcs_changes_vcs_change_id_get) | **GET** /issues/{id}/vcsChanges/{vcsChangeId} | 
 [**issues_id_vcs_changes_vcs_change_id_post**](DefaultApi.md#issues_id_vcs_changes_vcs_change_id_post) | **POST** /issues/{id}/vcsChanges/{vcsChangeId} | 
 [**issues_post**](DefaultApi.md#issues_post) | **POST** /issues | 
+[**permissions_get**](DefaultApi.md#permissions_get) | **GET** /permissions | 
+[**roles_get**](DefaultApi.md#roles_get) | **GET** /roles | 
+[**roles_id_delete**](DefaultApi.md#roles_id_delete) | **DELETE** /roles/{id} | 
+[**roles_id_get**](DefaultApi.md#roles_id_get) | **GET** /roles/{id} | 
+[**roles_id_post**](DefaultApi.md#roles_id_post) | **POST** /roles/{id} | 
+[**roles_post**](DefaultApi.md#roles_post) | **POST** /roles | 
 [**saved_queries_get**](DefaultApi.md#saved_queries_get) | **GET** /savedQueries | 
 [**saved_queries_id_delete**](DefaultApi.md#saved_queries_id_delete) | **DELETE** /savedQueries/{id} | 
 [**saved_queries_id_get**](DefaultApi.md#saved_queries_id_get) | **GET** /savedQueries/{id} | 
@@ -241,6 +263,7 @@ Method | HTTP request | Description
 [**tags_post**](DefaultApi.md#tags_post) | **POST** /tags | 
 [**users_get**](DefaultApi.md#users_get) | **GET** /users | 
 [**users_id_get**](DefaultApi.md#users_id_get) | **GET** /users/{id} | 
+[**users_id_post**](DefaultApi.md#users_id_post) | **POST** /users/{id} | 
 [**users_id_profiles_general_get**](DefaultApi.md#users_id_profiles_general_get) | **GET** /users/{id}/profiles/general | 
 [**users_id_profiles_general_post**](DefaultApi.md#users_id_profiles_general_post) | **POST** /users/{id}/profiles/general | 
 [**users_id_profiles_notifications_get**](DefaultApi.md#users_id_profiles_notifications_get) | **GET** /users/{id}/profiles/notifications | 
@@ -250,6 +273,7 @@ Method | HTTP request | Description
 [**users_id_saved_queries_get**](DefaultApi.md#users_id_saved_queries_get) | **GET** /users/{id}/savedQueries | 
 [**users_id_tags_get**](DefaultApi.md#users_id_tags_get) | **GET** /users/{id}/tags | 
 [**users_me_get**](DefaultApi.md#users_me_get) | **GET** /users/me | 
+[**users_post**](DefaultApi.md#users_post) | **POST** /users | 
 [**work_items_get**](DefaultApi.md#work_items_get) | **GET** /workItems | 
 [**work_items_id_get**](DefaultApi.md#work_items_id_get) | **GET** /workItems/{id} | 
 
@@ -3067,6 +3091,152 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## admin_organizations_get
+
+> Vec<models::Organization> admin_organizations_get(fields, dollar_skip, dollar_top)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**dollar_skip** | Option<**i32**> |  |  |
+**dollar_top** | Option<**i32**> |  |  |
+
+### Return type
+
+[**Vec<models::Organization>**](Organization.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## admin_organizations_id_delete
+
+> admin_organizations_id_delete(id)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## admin_organizations_id_get
+
+> models::Organization admin_organizations_id_get(id, fields)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,id]
+
+### Return type
+
+[**models::Organization**](Organization.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## admin_organizations_id_post
+
+> models::Organization admin_organizations_id_post(id, fields, organization)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**organization** | Option<[**Organization**](Organization.md)> |  |  |
+
+### Return type
+
+[**models::Organization**](Organization.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## admin_organizations_post
+
+> models::Organization admin_organizations_post(fields, organization)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**organization** | Option<[**Organization**](Organization.md)> |  |  |
+
+### Return type
+
+[**models::Organization**](Organization.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## admin_projects_get
 
 > Vec<models::Project> admin_projects_get(fields, dollar_skip, dollar_top)
@@ -5168,6 +5338,124 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## assigned_roles_get
+
+> Vec<models::AssignedRole> assigned_roles_get(query, fields, dollar_skip, dollar_top)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**query** | Option<**String**> |  |  |
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**dollar_skip** | Option<**i32**> |  |  |
+**dollar_top** | Option<**i32**> |  |  |
+
+### Return type
+
+[**Vec<models::AssignedRole>**](AssignedRole.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## assigned_roles_id_delete
+
+> assigned_roles_id_delete(id)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## assigned_roles_id_get
+
+> models::AssignedRole assigned_roles_id_get(id, fields)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,id]
+
+### Return type
+
+[**models::AssignedRole**](AssignedRole.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## assigned_roles_id_post
+
+> models::AssignedRole assigned_roles_id_post(id, fields, assigned_role)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**assigned_role** | Option<[**AssignedRole**](AssignedRole.md)> |  |  |
+
+### Return type
+
+[**models::AssignedRole**](AssignedRole.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## commands_assist_post
 
 > models::CommandList commands_assist_post(fields, command_list)
@@ -5229,7 +5517,7 @@ Name | Type | Description  | Required | Notes
 
 ## groups_get
 
-> Vec<models::UserGroup> groups_get(fields, dollar_skip, dollar_top)
+> Vec<models::UserGroup> groups_get(query, fields, dollar_skip, dollar_top)
 
 
 ### Parameters
@@ -5237,6 +5525,7 @@ Name | Type | Description  | Required | Notes
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
+**query** | Option<**String**> | A search query. |  |
 **fields** | Option<**String**> |  |  |[default to $type,allUsersGroup,id,name,ringId]
 **dollar_skip** | Option<**i32**> |  |  |
 **dollar_top** | Option<**i32**> |  |  |
@@ -5253,6 +5542,34 @@ Name | Type | Description  | Required | Notes
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## groups_id_delete
+
+> groups_id_delete(id)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -5281,6 +5598,189 @@ Name | Type | Description  | Required | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## groups_id_own_users_get
+
+> Vec<models::User> groups_id_own_users_get(id, fields, dollar_skip, dollar_top)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,banned,email,fullName,guest,id,login,ringId]
+**dollar_skip** | Option<**i32**> |  |  |
+**dollar_top** | Option<**i32**> |  |  |
+
+### Return type
+
+[**Vec<models::User>**](User.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## groups_id_own_users_user_id_post
+
+> models::User groups_id_own_users_user_id_post(id, user_id, fields, user)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**user_id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,banned,email,fullName,guest,id,login,ringId]
+**user** | Option<[**User**](User.md)> |  |  |
+
+### Return type
+
+[**models::User**](User.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## groups_id_post
+
+> models::UserGroup groups_id_post(id, fields, user_group)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,allUsersGroup,id,name,ringId]
+**user_group** | Option<[**UserGroup**](UserGroup.md)> |  |  |
+
+### Return type
+
+[**models::UserGroup**](UserGroup.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## groups_id_sub_groups_get
+
+> Vec<models::NestedGroup> groups_id_sub_groups_get(id, fields, dollar_skip, dollar_top)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,allUsersGroup,id,name,ringId]
+**dollar_skip** | Option<**i32**> |  |  |
+**dollar_top** | Option<**i32**> |  |  |
+
+### Return type
+
+[**Vec<models::NestedGroup>**](NestedGroup.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## groups_id_users_get
+
+> Vec<models::User> groups_id_users_get(id, fields, dollar_skip, dollar_top)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,banned,email,fullName,guest,id,login,ringId]
+**dollar_skip** | Option<**i32**> |  |  |
+**dollar_top** | Option<**i32**> |  |  |
+
+### Return type
+
+[**Vec<models::User>**](User.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## groups_post
+
+> models::UserGroup groups_post(fields, user_group)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**fields** | Option<**String**> |  |  |[default to $type,allUsersGroup,id,name,ringId]
+**user_group** | Option<[**UserGroup**](UserGroup.md)> |  |  |
+
+### Return type
+
+[**models::UserGroup**](UserGroup.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -6938,6 +7438,182 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## permissions_get
+
+> Vec<models::Permission> permissions_get(fields, dollar_skip, dollar_top)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**dollar_skip** | Option<**i32**> |  |  |
+**dollar_top** | Option<**i32**> |  |  |
+
+### Return type
+
+[**Vec<models::Permission>**](Permission.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## roles_get
+
+> Vec<models::Role> roles_get(fields, dollar_skip, dollar_top)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**dollar_skip** | Option<**i32**> |  |  |
+**dollar_top** | Option<**i32**> |  |  |
+
+### Return type
+
+[**Vec<models::Role>**](Role.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## roles_id_delete
+
+> roles_id_delete(id)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## roles_id_get
+
+> models::Role roles_id_get(id, fields)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,id]
+
+### Return type
+
+[**models::Role**](Role.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## roles_id_post
+
+> models::Role roles_id_post(id, fields, role)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**role** | Option<[**Role**](Role.md)> |  |  |
+
+### Return type
+
+[**models::Role**](Role.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## roles_post
+
+> models::Role roles_post(fields, role)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**fields** | Option<**String**> |  |  |[default to $type,id]
+**role** | Option<[**Role**](Role.md)> |  |  |
+
+### Return type
+
+[**models::Role**](Role.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## saved_queries_get
 
 > Vec<models::SavedQuery> saved_queries_get(fields, dollar_skip, dollar_top)
@@ -7351,6 +8027,36 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## users_id_post
+
+> models::User users_id_post(id, fields, user)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**id** | **String** |  | [required] |
+**fields** | Option<**String**> |  |  |[default to $type,banned,email,fullName,guest,id,login,ringId]
+**user** | Option<[**User**](User.md)> |  |  |
+
+### Return type
+
+[**models::User**](User.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## users_id_profiles_general_get
 
 > models::GeneralUserProfile users_id_profiles_general_get(id, fields)
@@ -7613,6 +8319,35 @@ Name | Type | Description  | Required | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## users_post
+
+> models::User users_post(fields, user)
+
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**fields** | Option<**String**> |  |  |[default to $type,banned,email,fullName,guest,id,login,ringId]
+**user** | Option<[**User**](User.md)> |  |  |
+
+### Return type
+
+[**models::User**](User.md)
+
+### Authorization
+
+[permanentToken](../README.md#permanentToken)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

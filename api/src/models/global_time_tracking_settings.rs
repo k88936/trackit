@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// GlobalTimeTrackingSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum GlobalTimeTrackingSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct GlobalTimeTrackingSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "workItemTypes", skip_serializing_if = "Option::is_none")]
+    pub work_item_types: Option<Vec<models::WorkItemType>>,
+    #[serde(rename = "workTimeSettings", skip_serializing_if = "Option::is_none")]
+    pub work_time_settings: Option<Box<models::WorkTimeSettings>>,
+    #[serde(rename = "attributePrototypes", skip_serializing_if = "Option::is_none")]
+    pub attribute_prototypes: Option<Vec<models::WorkItemAttributePrototype>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl GlobalTimeTrackingSettings {
+    /// 
+    pub fn new() -> GlobalTimeTrackingSettings {
+        GlobalTimeTrackingSettings {
+            id: None,
+            work_item_types: None,
+            work_time_settings: None,
+            attribute_prototypes: None,
+            dollar_type: None,
+        }
+    }
+}
 

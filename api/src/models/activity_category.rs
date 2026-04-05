@@ -12,11 +12,21 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ActivityCategory : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ActivityCategory {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ActivityCategory {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ActivityCategory {
+    /// 
+    pub fn new() -> ActivityCategory {
+        ActivityCategory {
+            id: None,
+            dollar_type: None,
+        }
+    }
+}
 

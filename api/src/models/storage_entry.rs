@@ -12,11 +12,24 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// StorageEntry : SSL key representation.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum StorageEntry {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct StorageEntry {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl StorageEntry {
+    /// SSL key representation.
+    pub fn new() -> StorageEntry {
+        StorageEntry {
+            id: None,
+            name: None,
+            dollar_type: None,
+        }
+    }
+}
 

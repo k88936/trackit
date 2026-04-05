@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueVoters : Represents users that have voted for the issue or its duplicates.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueVoters {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueVoters {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "hasVote", skip_serializing_if = "Option::is_none")]
+    pub has_vote: Option<bool>,
+    #[serde(rename = "original", skip_serializing_if = "Option::is_none")]
+    pub original: Option<Vec<models::User>>,
+    #[serde(rename = "duplicate", skip_serializing_if = "Option::is_none")]
+    pub duplicate: Option<Vec<models::DuplicateVote>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueVoters {
+    /// Represents users that have voted for the issue or its duplicates.
+    pub fn new() -> IssueVoters {
+        IssueVoters {
+            id: None,
+            has_vote: None,
+            original: None,
+            duplicate: None,
+            dollar_type: None,
+        }
+    }
+}
 

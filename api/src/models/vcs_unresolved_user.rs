@@ -20,16 +20,18 @@ pub struct VcsUnresolvedUser {
     pub login: Option<String>,
     #[serde(rename = "fullName", skip_serializing_if = "Option::is_none")]
     pub full_name: Option<String>,
-    #[serde(rename = "email", skip_serializing_if = "Option::is_none")]
-    pub email: Option<String>,
-    #[serde(rename = "ringId", skip_serializing_if = "Option::is_none")]
-    pub ring_id: Option<String>,
+    #[serde(rename = "email", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub email: Option<Option<String>>,
+    #[serde(rename = "ringId", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub ring_id: Option<Option<String>>,
     #[serde(rename = "guest", skip_serializing_if = "Option::is_none")]
     pub guest: Option<bool>,
     #[serde(rename = "online", skip_serializing_if = "Option::is_none")]
     pub online: Option<bool>,
     #[serde(rename = "banned", skip_serializing_if = "Option::is_none")]
     pub banned: Option<bool>,
+    #[serde(rename = "isAnonymized", skip_serializing_if = "Option::is_none")]
+    pub is_anonymized: Option<bool>,
     #[serde(rename = "tags", skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<models::Tag>>,
     #[serde(rename = "savedQueries", skip_serializing_if = "Option::is_none")]
@@ -38,10 +40,12 @@ pub struct VcsUnresolvedUser {
     pub avatar_url: Option<String>,
     #[serde(rename = "profiles", skip_serializing_if = "Option::is_none")]
     pub profiles: Option<Box<models::UserProfiles>>,
+    #[serde(rename = "userType", skip_serializing_if = "Option::is_none")]
+    pub user_type: Option<Box<models::UserType>>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub dollar_type: Option<String>,
-    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
+    #[serde(rename = "name", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub name: Option<Option<String>>,
 }
 
 impl VcsUnresolvedUser {
@@ -56,10 +60,12 @@ impl VcsUnresolvedUser {
             guest: None,
             online: None,
             banned: None,
+            is_anonymized: None,
             tags: None,
             saved_queries: None,
             avatar_url: None,
             profiles: None,
+            user_type: None,
             dollar_type: None,
             name: None,
         }

@@ -12,11 +12,21 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// PeriodFieldFormat : Represents the format, in which the period values are displayed to the user.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum PeriodFieldFormat {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct PeriodFieldFormat {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl PeriodFieldFormat {
+    /// Represents the format, in which the period values are displayed to the user.
+    pub fn new() -> PeriodFieldFormat {
+        PeriodFieldFormat {
+            id: None,
+            dollar_type: None,
+        }
+    }
+}
 

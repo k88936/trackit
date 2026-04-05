@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Reaction : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Reaction {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Reaction {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "author", skip_serializing_if = "Option::is_none")]
+    pub author: Option<Box<models::User>>,
+    #[serde(rename = "reaction", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub reaction: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Reaction {
+    /// 
+    pub fn new() -> Reaction {
+        Reaction {
+            id: None,
+            author: None,
+            reaction: None,
+            dollar_type: None,
+        }
+    }
+}
 

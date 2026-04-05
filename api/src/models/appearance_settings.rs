@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// AppearanceSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum AppearanceSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct AppearanceSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "timeZone", skip_serializing_if = "Option::is_none")]
+    pub time_zone: Option<Box<models::TimeZoneDescriptor>>,
+    #[serde(rename = "dateFieldFormat", skip_serializing_if = "Option::is_none")]
+    pub date_field_format: Option<Box<models::DateFormatDescriptor>>,
+    #[serde(rename = "logo", skip_serializing_if = "Option::is_none")]
+    pub logo: Option<Box<models::Logo>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl AppearanceSettings {
+    /// 
+    pub fn new() -> AppearanceSettings {
+        AppearanceSettings {
+            id: None,
+            time_zone: None,
+            date_field_format: None,
+            logo: None,
+            dollar_type: None,
+        }
+    }
+}
 

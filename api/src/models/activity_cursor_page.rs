@@ -12,11 +12,39 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ActivityCursorPage : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ActivityCursorPage {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ActivityCursorPage {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "activities", skip_serializing_if = "Option::is_none")]
+    pub activities: Option<Vec<models::ActivityItem>>,
+    #[serde(rename = "afterCursor", skip_serializing_if = "Option::is_none")]
+    pub after_cursor: Option<String>,
+    #[serde(rename = "beforeCursor", skip_serializing_if = "Option::is_none")]
+    pub before_cursor: Option<String>,
+    #[serde(rename = "hasAfter", skip_serializing_if = "Option::is_none")]
+    pub has_after: Option<bool>,
+    #[serde(rename = "hasBefore", skip_serializing_if = "Option::is_none")]
+    pub has_before: Option<bool>,
+    #[serde(rename = "reverse", skip_serializing_if = "Option::is_none")]
+    pub reverse: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ActivityCursorPage {
+    /// 
+    pub fn new() -> ActivityCursorPage {
+        ActivityCursorPage {
+            id: None,
+            activities: None,
+            after_cursor: None,
+            before_cursor: None,
+            has_after: None,
+            has_before: None,
+            reverse: None,
+            dollar_type: None,
+        }
+    }
+}
 

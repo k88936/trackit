@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// UserProfiles : Represents a group of settings of a user profile in YouTrack.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum UserProfiles {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct UserProfiles {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "general", skip_serializing_if = "Option::is_none")]
+    pub general: Option<Box<models::GeneralUserProfile>>,
+    #[serde(rename = "notifications", skip_serializing_if = "Option::is_none")]
+    pub notifications: Option<Box<models::NotificationsUserProfile>>,
+    #[serde(rename = "timetracking", skip_serializing_if = "Option::is_none")]
+    pub timetracking: Option<Box<models::TimeTrackingUserProfile>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl UserProfiles {
+    /// Represents a group of settings of a user profile in YouTrack.
+    pub fn new() -> UserProfiles {
+        UserProfiles {
+            id: None,
+            general: None,
+            notifications: None,
+            timetracking: None,
+            dollar_type: None,
+        }
+    }
+}
 

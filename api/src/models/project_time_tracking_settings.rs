@@ -12,11 +12,39 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ProjectTimeTrackingSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ProjectTimeTrackingSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ProjectTimeTrackingSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "enabled", skip_serializing_if = "Option::is_none")]
+    pub enabled: Option<bool>,
+    #[serde(rename = "estimate", skip_serializing_if = "Option::is_none")]
+    pub estimate: Option<Box<models::ProjectCustomField>>,
+    #[serde(rename = "timeSpent", skip_serializing_if = "Option::is_none")]
+    pub time_spent: Option<Box<models::ProjectCustomField>>,
+    #[serde(rename = "workItemTypes", skip_serializing_if = "Option::is_none")]
+    pub work_item_types: Option<Vec<models::WorkItemType>>,
+    #[serde(rename = "project", skip_serializing_if = "Option::is_none")]
+    pub project: Option<Box<models::Project>>,
+    #[serde(rename = "attributes", skip_serializing_if = "Option::is_none")]
+    pub attributes: Option<Vec<models::WorkItemProjectAttribute>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ProjectTimeTrackingSettings {
+    /// 
+    pub fn new() -> ProjectTimeTrackingSettings {
+        ProjectTimeTrackingSettings {
+            id: None,
+            enabled: None,
+            estimate: None,
+            time_spent: None,
+            work_item_types: None,
+            project: None,
+            attributes: None,
+            dollar_type: None,
+        }
+    }
+}
 

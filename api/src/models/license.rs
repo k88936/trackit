@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// License : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum License {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct License {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "username", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub username: Option<Option<String>>,
+    #[serde(rename = "license", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub license: Option<Option<String>>,
+    #[serde(rename = "error", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub error: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl License {
+    /// 
+    pub fn new() -> License {
+        License {
+            id: None,
+            username: None,
+            license: None,
+            error: None,
+            dollar_type: None,
+        }
+    }
+}
 

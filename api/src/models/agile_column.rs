@@ -12,11 +12,39 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// AgileColumn : Represents settings for a single board column
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum AgileColumn {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct AgileColumn {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "presentation", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub presentation: Option<Option<String>>,
+    #[serde(rename = "isResolved", skip_serializing_if = "Option::is_none")]
+    pub is_resolved: Option<bool>,
+    #[serde(rename = "ordinal", skip_serializing_if = "Option::is_none")]
+    pub ordinal: Option<i32>,
+    #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
+    pub parent: Option<Box<models::ColumnSettings>>,
+    #[serde(rename = "wipLimit", skip_serializing_if = "Option::is_none")]
+    pub wip_limit: Option<Box<models::WipLimit>>,
+    #[serde(rename = "fieldValues", skip_serializing_if = "Option::is_none")]
+    pub field_values: Option<Vec<models::AgileColumnFieldValue>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl AgileColumn {
+    /// Represents settings for a single board column
+    pub fn new() -> AgileColumn {
+        AgileColumn {
+            id: None,
+            presentation: None,
+            is_resolved: None,
+            ordinal: None,
+            parent: None,
+            wip_limit: None,
+            field_values: None,
+            dollar_type: None,
+        }
+    }
+}
 

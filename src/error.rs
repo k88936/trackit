@@ -8,6 +8,12 @@ pub enum TrackItError {
     #[error("API error: {0}")]
     Api(#[from] api::apis::Error<serde_json::Value>),
 
+    #[error("API request failed: {0}")]
+    ApiMessage(String),
+
+    #[error("API response error (status {status}): {body}")]
+    ApiResponse { status: u16, body: String },
+
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
 

@@ -12,11 +12,33 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueCountResponse : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueCountResponse {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueCountResponse {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "count", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub count: Option<Option<i64>>,
+    #[serde(rename = "unresolvedOnly", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub unresolved_only: Option<Option<bool>>,
+    #[serde(rename = "query", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub query: Option<Option<String>>,
+    #[serde(rename = "folder", skip_serializing_if = "Option::is_none")]
+    pub folder: Option<Box<models::IssueFolder>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueCountResponse {
+    /// 
+    pub fn new() -> IssueCountResponse {
+        IssueCountResponse {
+            id: None,
+            count: None,
+            unresolved_only: None,
+            query: None,
+            folder: None,
+            dollar_type: None,
+        }
+    }
+}
 

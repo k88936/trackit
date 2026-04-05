@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// DateFormatDescriptor : Represents date format.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum DateFormatDescriptor {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DateFormatDescriptor {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "presentation", skip_serializing_if = "Option::is_none")]
+    pub presentation: Option<String>,
+    #[serde(rename = "pattern", skip_serializing_if = "Option::is_none")]
+    pub pattern: Option<String>,
+    #[serde(rename = "datePattern", skip_serializing_if = "Option::is_none")]
+    pub date_pattern: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl DateFormatDescriptor {
+    /// Represents date format.
+    pub fn new() -> DateFormatDescriptor {
+        DateFormatDescriptor {
+            id: None,
+            presentation: None,
+            pattern: None,
+            date_pattern: None,
+            dollar_type: None,
+        }
+    }
+}
 

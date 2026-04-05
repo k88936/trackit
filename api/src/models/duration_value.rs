@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// DurationValue : Represents the duration value and its visual presentation.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum DurationValue {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DurationValue {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "minutes", skip_serializing_if = "Option::is_none")]
+    pub minutes: Option<i32>,
+    #[serde(rename = "presentation", skip_serializing_if = "Option::is_none")]
+    pub presentation: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl DurationValue {
+    /// Represents the duration value and its visual presentation.
+    pub fn new() -> DurationValue {
+        DurationValue {
+            id: None,
+            minutes: None,
+            presentation: None,
+            dollar_type: None,
+        }
+    }
+}
 

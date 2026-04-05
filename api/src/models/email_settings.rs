@@ -12,13 +12,50 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// EmailSettings : Represents email settings for this YouTrack installation.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum EmailSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct EmailSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "isEnabled", skip_serializing_if = "Option::is_none")]
+    pub is_enabled: Option<bool>,
+    #[serde(rename = "host", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub host: Option<Option<String>>,
+    #[serde(rename = "port", skip_serializing_if = "Option::is_none")]
+    pub port: Option<i32>,
+    #[serde(rename = "mailProtocol", skip_serializing_if = "Option::is_none")]
+    pub mail_protocol: Option<MailProtocol>,
+    #[serde(rename = "anonymous", skip_serializing_if = "Option::is_none")]
+    pub anonymous: Option<bool>,
+    #[serde(rename = "login", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub login: Option<Option<String>>,
+    #[serde(rename = "sslKey", skip_serializing_if = "Option::is_none")]
+    pub ssl_key: Option<Box<models::StorageEntry>>,
+    #[serde(rename = "from", skip_serializing_if = "Option::is_none")]
+    pub from: Option<String>,
+    #[serde(rename = "replyTo", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub reply_to: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl EmailSettings {
+    /// Represents email settings for this YouTrack installation.
+    pub fn new() -> EmailSettings {
+        EmailSettings {
+            id: None,
+            is_enabled: None,
+            host: None,
+            port: None,
+            mail_protocol: None,
+            anonymous: None,
+            login: None,
+            ssl_key: None,
+            from: None,
+            reply_to: None,
+            dollar_type: None,
+        }
+    }
+}
 /// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum MailProtocol {

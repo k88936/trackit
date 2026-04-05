@@ -12,11 +12,54 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// IssueComment : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum IssueComment {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct IssueComment {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "attachments", skip_serializing_if = "Option::is_none")]
+    pub attachments: Option<Vec<models::IssueAttachment>>,
+    #[serde(rename = "author", skip_serializing_if = "Option::is_none")]
+    pub author: Option<Box<models::User>>,
+    #[serde(rename = "created", skip_serializing_if = "Option::is_none")]
+    pub created: Option<i64>,
+    #[serde(rename = "deleted", skip_serializing_if = "Option::is_none")]
+    pub deleted: Option<bool>,
+    #[serde(rename = "issue", skip_serializing_if = "Option::is_none")]
+    pub issue: Option<Box<models::Issue>>,
+    #[serde(rename = "pinned", skip_serializing_if = "Option::is_none")]
+    pub pinned: Option<bool>,
+    #[serde(rename = "reactions", skip_serializing_if = "Option::is_none")]
+    pub reactions: Option<Vec<models::Reaction>>,
+    #[serde(rename = "text", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub text: Option<Option<String>>,
+    #[serde(rename = "textPreview", skip_serializing_if = "Option::is_none")]
+    pub text_preview: Option<String>,
+    #[serde(rename = "updated", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub updated: Option<Option<i64>>,
+    #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<Box<models::Visibility>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl IssueComment {
+    /// 
+    pub fn new() -> IssueComment {
+        IssueComment {
+            id: None,
+            attachments: None,
+            author: None,
+            created: None,
+            deleted: None,
+            issue: None,
+            pinned: None,
+            reactions: None,
+            text: None,
+            text_preview: None,
+            updated: None,
+            visibility: None,
+            dollar_type: None,
+        }
+    }
+}
 

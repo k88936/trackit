@@ -1,5 +1,6 @@
-use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
+
 use crate::error;
 use crate::error::TrackItError;
 
@@ -80,15 +81,27 @@ impl Config {
         Ok(())
     }
 
-    pub fn get_url(&self) -> error::Result<String> {
-        self.server_url.clone()
+    pub fn resolve_url(&self, cli_url: Option<&str>) -> error::Result<String> {
+        cli_url
+            .map(str::to_string)
+            .or_else(|| self.server_url.clone())
             .or_else(|| std::env::var("YOUTRACK_URL").ok())
-            .ok_or_else(|| TrackItError::MissingConfig("YouTrack URL not configured. Set YOUTRACK_URL or run 'trackit setup-wizard'".to_string()))
+            .ok_or_else(|| {
+                TrackItError::MissingConfig(
+                    "YouTrack URL not configured. Use --url, set trackit.toml, set YOUTRACK_URL, or run 'trackit setup-wizard'".to_string(),
+                )
+            })
     }
 
-    pub fn get_token(&self) -> error::Result<String> {
-        self.token.clone()
+    pub fn resolve_token(&self, cli_token: Option<&str>) -> error::Result<String> {
+        cli_token
+            .map(str::to_string)
+            .or_else(|| self.token.clone())
             .or_else(|| std::env::var("YOUTRACK_TOKEN").ok())
-            .ok_or_else(|| TrackItError::MissingConfig("API token not configured. Set YOUTRACK_TOKEN or run 'trackit setup-wizard'".to_string()))
+            .ok_or_else(|| {
+                TrackItError::MissingConfig(
+                    "API token not configured. Use --token, set trackit.toml, set YOUTRACK_TOKEN, or run 'trackit setup-wizard'".to_string(),
+                )
+            })
     }
 }

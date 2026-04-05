@@ -20,8 +20,8 @@ pub struct VersionBundleElement {
     pub name: Option<String>,
     #[serde(rename = "bundle", skip_serializing_if = "Option::is_none")]
     pub bundle: Option<Box<models::Bundle>>,
-    #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
     #[serde(rename = "archived", skip_serializing_if = "Option::is_none")]
     pub archived: Option<bool>,
     #[serde(rename = "ordinal", skip_serializing_if = "Option::is_none")]
@@ -34,10 +34,10 @@ pub struct VersionBundleElement {
     pub dollar_type: Option<String>,
     #[serde(rename = "released", skip_serializing_if = "Option::is_none")]
     pub released: Option<bool>,
-    #[serde(rename = "releaseDate", skip_serializing_if = "Option::is_none")]
-    pub release_date: Option<i64>,
-    #[serde(rename = "startDate", skip_serializing_if = "Option::is_none")]
-    pub start_date: Option<i64>,
+    #[serde(rename = "releaseDate", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub release_date: Option<Option<i64>>,
+    #[serde(rename = "startDate", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub start_date: Option<Option<i64>>,
 }
 
 impl VersionBundleElement {

@@ -12,11 +12,81 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Agile : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Agile {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Agile {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "owner", skip_serializing_if = "Option::is_none")]
+    pub owner: Option<Box<models::User>>,
+    #[serde(rename = "visibleFor", skip_serializing_if = "Option::is_none")]
+    pub visible_for: Option<Box<models::UserGroup>>,
+    #[serde(rename = "visibleForProjectBased", skip_serializing_if = "Option::is_none")]
+    pub visible_for_project_based: Option<bool>,
+    #[serde(rename = "updateableBy", skip_serializing_if = "Option::is_none")]
+    pub updateable_by: Option<Box<models::UserGroup>>,
+    #[serde(rename = "updateableByProjectBased", skip_serializing_if = "Option::is_none")]
+    pub updateable_by_project_based: Option<bool>,
+    #[serde(rename = "readSharingSettings", skip_serializing_if = "Option::is_none")]
+    pub read_sharing_settings: Option<Box<models::AgileSharingSettings>>,
+    #[serde(rename = "updateSharingSettings", skip_serializing_if = "Option::is_none")]
+    pub update_sharing_settings: Option<Box<models::AgileSharingSettings>>,
+    #[serde(rename = "orphansAtTheTop", skip_serializing_if = "Option::is_none")]
+    pub orphans_at_the_top: Option<bool>,
+    #[serde(rename = "hideOrphansSwimlane", skip_serializing_if = "Option::is_none")]
+    pub hide_orphans_swimlane: Option<bool>,
+    #[serde(rename = "estimationField", skip_serializing_if = "Option::is_none")]
+    pub estimation_field: Option<Box<models::CustomField>>,
+    #[serde(rename = "originalEstimationField", skip_serializing_if = "Option::is_none")]
+    pub original_estimation_field: Option<Box<models::CustomField>>,
+    #[serde(rename = "projects", skip_serializing_if = "Option::is_none")]
+    pub projects: Option<Vec<models::Project>>,
+    #[serde(rename = "sprints", skip_serializing_if = "Option::is_none")]
+    pub sprints: Option<Vec<models::Sprint>>,
+    #[serde(rename = "currentSprint", skip_serializing_if = "Option::is_none")]
+    pub current_sprint: Option<Box<models::Sprint>>,
+    #[serde(rename = "columnSettings", skip_serializing_if = "Option::is_none")]
+    pub column_settings: Option<Box<models::ColumnSettings>>,
+    #[serde(rename = "swimlaneSettings", skip_serializing_if = "Option::is_none")]
+    pub swimlane_settings: Option<Box<models::SwimlaneSettings>>,
+    #[serde(rename = "sprintsSettings", skip_serializing_if = "Option::is_none")]
+    pub sprints_settings: Option<Box<models::SprintsSettings>>,
+    #[serde(rename = "colorCoding", skip_serializing_if = "Option::is_none")]
+    pub color_coding: Option<Box<models::ColorCoding>>,
+    #[serde(rename = "status", skip_serializing_if = "Option::is_none")]
+    pub status: Option<Box<models::AgileStatus>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Agile {
+    /// 
+    pub fn new() -> Agile {
+        Agile {
+            id: None,
+            name: None,
+            owner: None,
+            visible_for: None,
+            visible_for_project_based: None,
+            updateable_by: None,
+            updateable_by_project_based: None,
+            read_sharing_settings: None,
+            update_sharing_settings: None,
+            orphans_at_the_top: None,
+            hide_orphans_swimlane: None,
+            estimation_field: None,
+            original_estimation_field: None,
+            projects: None,
+            sprints: None,
+            current_sprint: None,
+            column_settings: None,
+            swimlane_settings: None,
+            sprints_settings: None,
+            color_coding: None,
+            status: None,
+            dollar_type: None,
+        }
+    }
+}
 

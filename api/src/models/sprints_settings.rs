@@ -12,11 +12,42 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// SprintsSettings : Describes sprints configuration.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum SprintsSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct SprintsSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "isExplicit", skip_serializing_if = "Option::is_none")]
+    pub is_explicit: Option<bool>,
+    #[serde(rename = "cardOnSeveralSprints", skip_serializing_if = "Option::is_none")]
+    pub card_on_several_sprints: Option<bool>,
+    #[serde(rename = "defaultSprint", skip_serializing_if = "Option::is_none")]
+    pub default_sprint: Option<Box<models::Sprint>>,
+    #[serde(rename = "disableSprints", skip_serializing_if = "Option::is_none")]
+    pub disable_sprints: Option<bool>,
+    #[serde(rename = "explicitQuery", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub explicit_query: Option<Option<String>>,
+    #[serde(rename = "sprintSyncField", skip_serializing_if = "Option::is_none")]
+    pub sprint_sync_field: Option<Box<models::CustomField>>,
+    #[serde(rename = "hideSubtasksOfCards", skip_serializing_if = "Option::is_none")]
+    pub hide_subtasks_of_cards: Option<bool>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl SprintsSettings {
+    /// Describes sprints configuration.
+    pub fn new() -> SprintsSettings {
+        SprintsSettings {
+            id: None,
+            is_explicit: None,
+            card_on_several_sprints: None,
+            default_sprint: None,
+            disable_sprints: None,
+            explicit_query: None,
+            sprint_sync_field: None,
+            hide_subtasks_of_cards: None,
+            dollar_type: None,
+        }
+    }
+}
 

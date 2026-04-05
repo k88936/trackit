@@ -12,11 +12,36 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// WorkItemProjectAttribute : Represents the project-related settings of a work item attribute.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum WorkItemProjectAttribute {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct WorkItemProjectAttribute {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "timeTrackingSettings", skip_serializing_if = "Option::is_none")]
+    pub time_tracking_settings: Option<Box<models::ProjectTimeTrackingSettings>>,
+    #[serde(rename = "prototype", skip_serializing_if = "Option::is_none")]
+    pub prototype: Option<Box<models::WorkItemAttributePrototype>>,
+    #[serde(rename = "values", skip_serializing_if = "Option::is_none")]
+    pub values: Option<Vec<models::WorkItemAttributeValue>>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "ordinal", skip_serializing_if = "Option::is_none")]
+    pub ordinal: Option<i32>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl WorkItemProjectAttribute {
+    /// Represents the project-related settings of a work item attribute.
+    pub fn new() -> WorkItemProjectAttribute {
+        WorkItemProjectAttribute {
+            id: None,
+            time_tracking_settings: None,
+            prototype: None,
+            values: None,
+            name: None,
+            ordinal: None,
+            dollar_type: None,
+        }
+    }
+}
 

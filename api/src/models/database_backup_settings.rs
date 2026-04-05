@@ -12,13 +12,47 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// DatabaseBackupSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum DatabaseBackupSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DatabaseBackupSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "location", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub location: Option<Option<String>>,
+    #[serde(rename = "filesToKeep", skip_serializing_if = "Option::is_none")]
+    pub files_to_keep: Option<i32>,
+    #[serde(rename = "cronExpression", skip_serializing_if = "Option::is_none")]
+    pub cron_expression: Option<String>,
+    #[serde(rename = "archiveFormat", skip_serializing_if = "Option::is_none")]
+    pub archive_format: Option<ArchiveFormat>,
+    #[serde(rename = "isOn", skip_serializing_if = "Option::is_none")]
+    pub is_on: Option<bool>,
+    #[serde(rename = "availableDiskSpace", skip_serializing_if = "Option::is_none")]
+    pub available_disk_space: Option<i64>,
+    #[serde(rename = "notifiedUsers", skip_serializing_if = "Option::is_none")]
+    pub notified_users: Option<Vec<models::User>>,
+    #[serde(rename = "backupStatus", skip_serializing_if = "Option::is_none")]
+    pub backup_status: Option<Box<models::BackupStatus>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl DatabaseBackupSettings {
+    /// 
+    pub fn new() -> DatabaseBackupSettings {
+        DatabaseBackupSettings {
+            id: None,
+            location: None,
+            files_to_keep: None,
+            cron_expression: None,
+            archive_format: None,
+            is_on: None,
+            available_disk_space: None,
+            notified_users: None,
+            backup_status: None,
+            dollar_type: None,
+        }
+    }
+}
 /// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum ArchiveFormat {

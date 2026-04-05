@@ -12,11 +12,33 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// LocaleDescriptor : Represents a language locale that is used in UI.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum LocaleDescriptor {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct LocaleDescriptor {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "locale", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub locale: Option<Option<String>>,
+    #[serde(rename = "language", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub language: Option<Option<String>>,
+    #[serde(rename = "community", skip_serializing_if = "Option::is_none")]
+    pub community: Option<bool>,
+    #[serde(rename = "name", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub name: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl LocaleDescriptor {
+    /// Represents a language locale that is used in UI.
+    pub fn new() -> LocaleDescriptor {
+        LocaleDescriptor {
+            id: None,
+            locale: None,
+            language: None,
+            community: None,
+            name: None,
+            dollar_type: None,
+        }
+    }
+}
 

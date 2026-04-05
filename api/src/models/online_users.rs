@@ -12,11 +12,24 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// OnlineUsers : Stores number of online user.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum OnlineUsers {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct OnlineUsers {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+    pub users: Option<i32>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl OnlineUsers {
+    /// Stores number of online user.
+    pub fn new() -> OnlineUsers {
+        OnlineUsers {
+            id: None,
+            users: None,
+            dollar_type: None,
+        }
+    }
+}
 

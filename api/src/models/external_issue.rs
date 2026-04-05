@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ExternalIssue : For an issue that was imported from another service, represents the reference to the issue in the external system.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ExternalIssue {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ExternalIssue {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "url", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub url: Option<Option<String>>,
+    #[serde(rename = "key", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub key: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ExternalIssue {
+    /// For an issue that was imported from another service, represents the reference to the issue in the external system.
+    pub fn new() -> ExternalIssue {
+        ExternalIssue {
+            id: None,
+            name: None,
+            url: None,
+            key: None,
+            dollar_type: None,
+        }
+    }
+}
 

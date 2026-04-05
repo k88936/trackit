@@ -28,8 +28,8 @@ pub struct WorkItemAuthorActivityItem {
     pub removed: Option<Box<models::User>>,
     #[serde(rename = "target", skip_serializing_if = "Option::is_none")]
     pub target: Option<Box<models::IssueWorkItem>>,
-    #[serde(rename = "targetMember", skip_serializing_if = "Option::is_none")]
-    pub target_member: Option<String>,
+    #[serde(rename = "targetMember", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub target_member: Option<Option<String>>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]

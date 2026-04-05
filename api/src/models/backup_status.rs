@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// BackupStatus : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum BackupStatus {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BackupStatus {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "backupInProgress", skip_serializing_if = "Option::is_none")]
+    pub backup_in_progress: Option<bool>,
+    #[serde(rename = "backupCancelled", skip_serializing_if = "Option::is_none")]
+    pub backup_cancelled: Option<bool>,
+    #[serde(rename = "backupError", skip_serializing_if = "Option::is_none")]
+    pub backup_error: Option<Box<models::BackupError>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl BackupStatus {
+    /// 
+    pub fn new() -> BackupStatus {
+        BackupStatus {
+            id: None,
+            backup_in_progress: None,
+            backup_cancelled: None,
+            backup_error: None,
+            dollar_type: None,
+        }
+    }
+}
 

@@ -10,9 +10,8 @@ Name | Type | Description | Notes
 **users_count** | Option<**i64**> |  | [optional][readonly]
 **icon** | Option<**String**> |  | [optional][readonly]
 **all_users_group** | Option<**bool**> |  | [optional][readonly]
-**team_for_project** | Option<[**models::Project**](Project.md)> |  | [optional]
+**users** | Option<[**Vec<models::User>**](User.md)> |  | [optional][readonly]
 **dollar_type** | Option<**String**> |  | [optional][readonly]
-**project** | Option<[**models::Project**](Project.md)> |  | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

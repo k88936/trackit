@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// WorkItemAttributePrototype : Represents a work item attribute prototype that is common for all projects. The project-related settings for work item attributes are stored in the `WorkItemProjectAttribute` entities.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum WorkItemAttributePrototype {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct WorkItemAttributePrototype {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "instances", skip_serializing_if = "Option::is_none")]
+    pub instances: Option<Vec<models::WorkItemProjectAttribute>>,
+    #[serde(rename = "values", skip_serializing_if = "Option::is_none")]
+    pub values: Option<Vec<models::WorkItemAttributeValue>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl WorkItemAttributePrototype {
+    /// Represents a work item attribute prototype that is common for all projects. The project-related settings for work item attributes are stored in the `WorkItemProjectAttribute` entities.
+    pub fn new() -> WorkItemAttributePrototype {
+        WorkItemAttributePrototype {
+            id: None,
+            name: None,
+            instances: None,
+            values: None,
+            dollar_type: None,
+        }
+    }
+}
 

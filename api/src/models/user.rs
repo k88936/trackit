@@ -33,6 +33,8 @@ pub enum User {
         online: Option<bool>,
         #[serde(rename = "banned", skip_serializing_if = "Option::is_none")]
         banned: Option<bool>,
+        #[serde(rename = "isAnonymized", skip_serializing_if = "Option::is_none")]
+        is_anonymized: Option<bool>,
         #[serde(rename = "tags", skip_serializing_if = "Option::is_none")]
         tags: Option<Vec<models::Tag>>,
         #[serde(rename = "savedQueries", skip_serializing_if = "Option::is_none")]
@@ -41,6 +43,8 @@ pub enum User {
         avatar_url: Option<String>,
         #[serde(rename = "profiles", skip_serializing_if = "Option::is_none")]
         profiles: Option<Box<models::UserProfiles>>,
+        #[serde(rename = "userType", skip_serializing_if = "Option::is_none")]
+        user_type: Option<Box<models::UserType>>,
     },
     #[serde(rename="User")]
     User {
@@ -60,6 +64,8 @@ pub enum User {
         online: Option<bool>,
         #[serde(rename = "banned", skip_serializing_if = "Option::is_none")]
         banned: Option<bool>,
+        #[serde(rename = "isAnonymized", skip_serializing_if = "Option::is_none")]
+        is_anonymized: Option<bool>,
         #[serde(rename = "tags", skip_serializing_if = "Option::is_none")]
         tags: Option<Vec<models::Tag>>,
         #[serde(rename = "savedQueries", skip_serializing_if = "Option::is_none")]
@@ -68,6 +74,8 @@ pub enum User {
         avatar_url: Option<String>,
         #[serde(rename = "profiles", skip_serializing_if = "Option::is_none")]
         profiles: Option<Box<models::UserProfiles>>,
+        #[serde(rename = "userType", skip_serializing_if = "Option::is_none")]
+        user_type: Option<Box<models::UserType>>,
     },
     #[serde(rename="VcsUnresolvedUser")]
     VcsUnresolvedUser {
@@ -87,6 +95,8 @@ pub enum User {
         online: Option<bool>,
         #[serde(rename = "banned", skip_serializing_if = "Option::is_none")]
         banned: Option<bool>,
+        #[serde(rename = "isAnonymized", skip_serializing_if = "Option::is_none")]
+        is_anonymized: Option<bool>,
         #[serde(rename = "tags", skip_serializing_if = "Option::is_none")]
         tags: Option<Vec<models::Tag>>,
         #[serde(rename = "savedQueries", skip_serializing_if = "Option::is_none")]
@@ -95,6 +105,8 @@ pub enum User {
         avatar_url: Option<String>,
         #[serde(rename = "profiles", skip_serializing_if = "Option::is_none")]
         profiles: Option<Box<models::UserProfiles>>,
+        #[serde(rename = "userType", skip_serializing_if = "Option::is_none")]
+        user_type: Option<Box<models::UserType>>,
     },
 }
 
@@ -109,10 +121,12 @@ impl Default for User {
             guest: Default::default(),
             online: Default::default(),
             banned: Default::default(),
+            is_anonymized: Default::default(),
             tags: Default::default(),
             saved_queries: Default::default(),
             avatar_url: Default::default(),
             profiles: Default::default(),
+            user_type: Default::default(),
         }
         
     }

@@ -682,6 +682,41 @@ pub enum AdminGlobalSettingsSystemSettingsPostError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`admin_organizations_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AdminOrganizationsGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`admin_organizations_id_delete`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AdminOrganizationsIdDeleteError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`admin_organizations_id_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AdminOrganizationsIdGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`admin_organizations_id_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AdminOrganizationsIdPostError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`admin_organizations_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AdminOrganizationsPostError {
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`admin_projects_get`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -1172,6 +1207,34 @@ pub enum ArticlesPostError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`assigned_roles_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AssignedRolesGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`assigned_roles_id_delete`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AssignedRolesIdDeleteError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`assigned_roles_id_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AssignedRolesIdGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`assigned_roles_id_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AssignedRolesIdPostError {
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`commands_assist_post`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -1193,10 +1256,59 @@ pub enum GroupsGetError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`groups_id_delete`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GroupsIdDeleteError {
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`groups_id_get`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GroupsIdGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`groups_id_own_users_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GroupsIdOwnUsersGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`groups_id_own_users_user_id_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GroupsIdOwnUsersUserIdPostError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`groups_id_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GroupsIdPostError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`groups_id_sub_groups_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GroupsIdSubGroupsGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`groups_id_users_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GroupsIdUsersGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`groups_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GroupsPostError {
     UnknownValue(serde_json::Value),
 }
 
@@ -1578,6 +1690,48 @@ pub enum IssuesPostError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`permissions_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum PermissionsGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`roles_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RolesGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`roles_id_delete`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RolesIdDeleteError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`roles_id_get`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RolesIdGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`roles_id_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RolesIdPostError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`roles_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RolesPostError {
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`saved_queries_get`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -1676,6 +1830,13 @@ pub enum UsersIdGetError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`users_id_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UsersIdPostError {
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`users_id_profiles_general_get`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -1736,6 +1897,13 @@ pub enum UsersIdTagsGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum UsersMeGetError {
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`users_post`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UsersPostError {
     UnknownValue(serde_json::Value),
 }
 
@@ -5891,6 +6059,216 @@ pub async fn admin_global_settings_system_settings_post(configuration: &configur
     }
 }
 
+pub async fn admin_organizations_get(configuration: &configuration::Configuration, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::Organization>, Error<AdminOrganizationsGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_fields = fields;
+    let p_query_dollar_skip = dollar_skip;
+    let p_query_dollar_top = dollar_top;
+
+    let uri_str = format!("{}/admin/organizations", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_skip {
+        req_builder = req_builder.query(&[("$skip", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_top {
+        req_builder = req_builder.query(&[("$top", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::Organization&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::Organization&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AdminOrganizationsGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn admin_organizations_id_delete(configuration: &configuration::Configuration, id: &str) -> Result<(), Error<AdminOrganizationsIdDeleteError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+
+    let uri_str = format!("{}/admin/organizations/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
+
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+
+    if !status.is_client_error() && !status.is_server_error() {
+        Ok(())
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AdminOrganizationsIdDeleteError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn admin_organizations_id_get(configuration: &configuration::Configuration, id: &str, fields: Option<&str>) -> Result<models::Organization, Error<AdminOrganizationsIdGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+
+    let uri_str = format!("{}/admin/organizations/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::Organization`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::Organization`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AdminOrganizationsIdGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn admin_organizations_id_post(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, organization: Option<models::Organization>) -> Result<models::Organization, Error<AdminOrganizationsIdPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_body_organization = organization;
+
+    let uri_str = format!("{}/admin/organizations/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_organization);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::Organization`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::Organization`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AdminOrganizationsIdPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn admin_organizations_post(configuration: &configuration::Configuration, fields: Option<&str>, organization: Option<models::Organization>) -> Result<models::Organization, Error<AdminOrganizationsPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_fields = fields;
+    let p_body_organization = organization;
+
+    let uri_str = format!("{}/admin/organizations", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_organization);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::Organization`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::Organization`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AdminOrganizationsPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 pub async fn admin_projects_get(configuration: &configuration::Configuration, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::Project>, Error<AdminProjectsGetError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_query_fields = fields;
@@ -8944,6 +9322,176 @@ pub async fn articles_post(configuration: &configuration::Configuration, draft_i
     }
 }
 
+pub async fn assigned_roles_get(configuration: &configuration::Configuration, query: Option<&str>, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::AssignedRole>, Error<AssignedRolesGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_query = query;
+    let p_query_fields = fields;
+    let p_query_dollar_skip = dollar_skip;
+    let p_query_dollar_top = dollar_top;
+
+    let uri_str = format!("{}/assignedRoles", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_query {
+        req_builder = req_builder.query(&[("query", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_skip {
+        req_builder = req_builder.query(&[("$skip", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_top {
+        req_builder = req_builder.query(&[("$top", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::AssignedRole&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::AssignedRole&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AssignedRolesGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn assigned_roles_id_delete(configuration: &configuration::Configuration, id: &str) -> Result<(), Error<AssignedRolesIdDeleteError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+
+    let uri_str = format!("{}/assignedRoles/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
+
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+
+    if !status.is_client_error() && !status.is_server_error() {
+        Ok(())
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AssignedRolesIdDeleteError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn assigned_roles_id_get(configuration: &configuration::Configuration, id: &str, fields: Option<&str>) -> Result<models::AssignedRole, Error<AssignedRolesIdGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+
+    let uri_str = format!("{}/assignedRoles/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AssignedRole`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AssignedRole`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AssignedRolesIdGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn assigned_roles_id_post(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, assigned_role: Option<models::AssignedRole>) -> Result<models::AssignedRole, Error<AssignedRolesIdPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_body_assigned_role = assigned_role;
+
+    let uri_str = format!("{}/assignedRoles/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_assigned_role);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AssignedRole`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AssignedRole`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<AssignedRolesIdPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 pub async fn commands_assist_post(configuration: &configuration::Configuration, fields: Option<&str>, command_list: Option<models::CommandList>) -> Result<models::CommandList, Error<CommandsAssistPostError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_query_fields = fields;
@@ -9036,8 +9584,9 @@ pub async fn commands_post(configuration: &configuration::Configuration, mute_up
     }
 }
 
-pub async fn groups_get(configuration: &configuration::Configuration, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::UserGroup>, Error<GroupsGetError>> {
+pub async fn groups_get(configuration: &configuration::Configuration, query: Option<&str>, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::UserGroup>, Error<GroupsGetError>> {
     // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_query = query;
     let p_query_fields = fields;
     let p_query_dollar_skip = dollar_skip;
     let p_query_dollar_top = dollar_top;
@@ -9045,6 +9594,9 @@ pub async fn groups_get(configuration: &configuration::Configuration, fields: Op
     let uri_str = format!("{}/groups", configuration.base_path);
     let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
+    if let Some(ref param_value) = p_query_query {
+        req_builder = req_builder.query(&[("query", &param_value.to_string())]);
+    }
     if let Some(ref param_value) = p_query_fields {
         req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
     }
@@ -9082,6 +9634,34 @@ pub async fn groups_get(configuration: &configuration::Configuration, fields: Op
     } else {
         let content = resp.text().await?;
         let entity: Option<GroupsGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn groups_id_delete(configuration: &configuration::Configuration, id: &str) -> Result<(), Error<GroupsIdDeleteError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+
+    let uri_str = format!("{}/groups/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
+
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+
+    if !status.is_client_error() && !status.is_server_error() {
+        Ok(())
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<GroupsIdDeleteError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
@@ -9125,6 +9705,294 @@ pub async fn groups_id_get(configuration: &configuration::Configuration, id: &st
     } else {
         let content = resp.text().await?;
         let entity: Option<GroupsIdGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn groups_id_own_users_get(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::User>, Error<GroupsIdOwnUsersGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_query_dollar_skip = dollar_skip;
+    let p_query_dollar_top = dollar_top;
+
+    let uri_str = format!("{}/groups/{id}/ownUsers", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_skip {
+        req_builder = req_builder.query(&[("$skip", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_top {
+        req_builder = req_builder.query(&[("$top", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::User&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::User&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<GroupsIdOwnUsersGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn groups_id_own_users_user_id_post(configuration: &configuration::Configuration, id: &str, user_id: &str, fields: Option<&str>, user: Option<models::User>) -> Result<models::User, Error<GroupsIdOwnUsersUserIdPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_path_user_id = user_id;
+    let p_query_fields = fields;
+    let p_body_user = user;
+
+    let uri_str = format!("{}/groups/{id}/ownUsers/{userId}", configuration.base_path, id=crate::apis::urlencode(p_path_id), userId=crate::apis::urlencode(p_path_user_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_user);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::User`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::User`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<GroupsIdOwnUsersUserIdPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn groups_id_post(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, user_group: Option<models::UserGroup>) -> Result<models::UserGroup, Error<GroupsIdPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_body_user_group = user_group;
+
+    let uri_str = format!("{}/groups/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_user_group);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::UserGroup`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::UserGroup`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<GroupsIdPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn groups_id_sub_groups_get(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::NestedGroup>, Error<GroupsIdSubGroupsGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_query_dollar_skip = dollar_skip;
+    let p_query_dollar_top = dollar_top;
+
+    let uri_str = format!("{}/groups/{id}/subGroups", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_skip {
+        req_builder = req_builder.query(&[("$skip", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_top {
+        req_builder = req_builder.query(&[("$top", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::NestedGroup&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::NestedGroup&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<GroupsIdSubGroupsGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn groups_id_users_get(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::User>, Error<GroupsIdUsersGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_query_dollar_skip = dollar_skip;
+    let p_query_dollar_top = dollar_top;
+
+    let uri_str = format!("{}/groups/{id}/users", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_skip {
+        req_builder = req_builder.query(&[("$skip", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_top {
+        req_builder = req_builder.query(&[("$top", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::User&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::User&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<GroupsIdUsersGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn groups_post(configuration: &configuration::Configuration, fields: Option<&str>, user_group: Option<models::UserGroup>) -> Result<models::UserGroup, Error<GroupsPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_fields = fields;
+    let p_body_user_group = user_group;
+
+    let uri_str = format!("{}/groups", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_user_group);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::UserGroup`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::UserGroup`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<GroupsPostError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
@@ -11599,6 +12467,266 @@ pub async fn issues_post(configuration: &configuration::Configuration, draft_id:
     }
 }
 
+pub async fn permissions_get(configuration: &configuration::Configuration, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::Permission>, Error<PermissionsGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_fields = fields;
+    let p_query_dollar_skip = dollar_skip;
+    let p_query_dollar_top = dollar_top;
+
+    let uri_str = format!("{}/permissions", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_skip {
+        req_builder = req_builder.query(&[("$skip", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_top {
+        req_builder = req_builder.query(&[("$top", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::Permission&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::Permission&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<PermissionsGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn roles_get(configuration: &configuration::Configuration, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::Role>, Error<RolesGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_fields = fields;
+    let p_query_dollar_skip = dollar_skip;
+    let p_query_dollar_top = dollar_top;
+
+    let uri_str = format!("{}/roles", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_skip {
+        req_builder = req_builder.query(&[("$skip", &param_value.to_string())]);
+    }
+    if let Some(ref param_value) = p_query_dollar_top {
+        req_builder = req_builder.query(&[("$top", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::Role&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::Role&gt;`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<RolesGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn roles_id_delete(configuration: &configuration::Configuration, id: &str) -> Result<(), Error<RolesIdDeleteError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+
+    let uri_str = format!("{}/roles/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
+
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+
+    if !status.is_client_error() && !status.is_server_error() {
+        Ok(())
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<RolesIdDeleteError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn roles_id_get(configuration: &configuration::Configuration, id: &str, fields: Option<&str>) -> Result<models::Role, Error<RolesIdGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+
+    let uri_str = format!("{}/roles/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::Role`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::Role`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<RolesIdGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn roles_id_post(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, role: Option<models::Role>) -> Result<models::Role, Error<RolesIdPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_body_role = role;
+
+    let uri_str = format!("{}/roles/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_role);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::Role`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::Role`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<RolesIdPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn roles_post(configuration: &configuration::Configuration, fields: Option<&str>, role: Option<models::Role>) -> Result<models::Role, Error<RolesPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_fields = fields;
+    let p_body_role = role;
+
+    let uri_str = format!("{}/roles", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_role);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::Role`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::Role`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<RolesPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 pub async fn saved_queries_get(configuration: &configuration::Configuration, fields: Option<&str>, dollar_skip: Option<i32>, dollar_top: Option<i32>) -> Result<Vec<models::SavedQuery>, Error<SavedQueriesGetError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_query_fields = fields;
@@ -12215,6 +13343,51 @@ pub async fn users_id_get(configuration: &configuration::Configuration, id: &str
     }
 }
 
+pub async fn users_id_post(configuration: &configuration::Configuration, id: &str, fields: Option<&str>, user: Option<models::User>) -> Result<models::User, Error<UsersIdPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_id = id;
+    let p_query_fields = fields;
+    let p_body_user = user;
+
+    let uri_str = format!("{}/users/{id}", configuration.base_path, id=crate::apis::urlencode(p_path_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_user);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::User`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::User`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<UsersIdPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
 pub async fn users_id_profiles_general_get(configuration: &configuration::Configuration, id: &str, fields: Option<&str>) -> Result<models::GeneralUserProfile, Error<UsersIdProfilesGeneralGetError>> {
     // add a prefix to parameters to efficiently prevent name collisions
     let p_path_id = id;
@@ -12619,6 +13792,50 @@ pub async fn users_me_get(configuration: &configuration::Configuration, fields: 
     } else {
         let content = resp.text().await?;
         let entity: Option<UsersMeGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
+    }
+}
+
+pub async fn users_post(configuration: &configuration::Configuration, fields: Option<&str>, user: Option<models::User>) -> Result<models::User, Error<UsersPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_fields = fields;
+    let p_body_user = user;
+
+    let uri_str = format!("{}/users", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
+
+    if let Some(ref param_value) = p_query_fields {
+        req_builder = req_builder.query(&[("fields", &param_value.to_string())]);
+    }
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
+    }
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
+    };
+    req_builder = req_builder.json(&p_body_user);
+
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
+
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
+
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::User`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::User`")))),
+        }
+    } else {
+        let content = resp.text().await?;
+        let entity: Option<UsersPostError> = serde_json::from_str(&content).ok();
         Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }

@@ -22,8 +22,8 @@ pub struct BundleProjectCustomField {
     pub project: Option<Box<models::Project>>,
     #[serde(rename = "canBeEmpty", skip_serializing_if = "Option::is_none")]
     pub can_be_empty: Option<bool>,
-    #[serde(rename = "emptyFieldText", skip_serializing_if = "Option::is_none")]
-    pub empty_field_text: Option<String>,
+    #[serde(rename = "emptyFieldText", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub empty_field_text: Option<Option<String>>,
     #[serde(rename = "ordinal", skip_serializing_if = "Option::is_none")]
     pub ordinal: Option<i32>,
     #[serde(rename = "isPublic", skip_serializing_if = "Option::is_none")]

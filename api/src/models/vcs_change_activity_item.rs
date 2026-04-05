@@ -28,8 +28,8 @@ pub struct VcsChangeActivityItem {
     pub removed: Option<Vec<models::VcsChange>>,
     #[serde(rename = "target", skip_serializing_if = "Option::is_none")]
     pub target: Option<serde_json::Value>,
-    #[serde(rename = "targetMember", skip_serializing_if = "Option::is_none")]
-    pub target_member: Option<String>,
+    #[serde(rename = "targetMember", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub target_member: Option<Option<String>>,
     #[serde(rename = "timestamp", skip_serializing_if = "Option::is_none")]
     pub timestamp: Option<i64>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]

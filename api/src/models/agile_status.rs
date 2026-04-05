@@ -12,11 +12,33 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// AgileStatus : Shows if the board has any configuration problems.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum AgileStatus {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct AgileStatus {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "valid", skip_serializing_if = "Option::is_none")]
+    pub valid: Option<bool>,
+    #[serde(rename = "hasJobs", skip_serializing_if = "Option::is_none")]
+    pub has_jobs: Option<bool>,
+    #[serde(rename = "errors", skip_serializing_if = "Option::is_none")]
+    pub errors: Option<Vec<String>>,
+    #[serde(rename = "warnings", skip_serializing_if = "Option::is_none")]
+    pub warnings: Option<Vec<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl AgileStatus {
+    /// Shows if the board has any configuration problems.
+    pub fn new() -> AgileStatus {
+        AgileStatus {
+            id: None,
+            valid: None,
+            has_jobs: None,
+            errors: None,
+            warnings: None,
+            dollar_type: None,
+        }
+    }
+}
 

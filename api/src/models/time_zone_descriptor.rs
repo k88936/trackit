@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// TimeZoneDescriptor : Represents a time zone.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum TimeZoneDescriptor {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct TimeZoneDescriptor {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "presentation", skip_serializing_if = "Option::is_none")]
+    pub presentation: Option<String>,
+    #[serde(rename = "offset", skip_serializing_if = "Option::is_none")]
+    pub offset: Option<i32>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl TimeZoneDescriptor {
+    /// Represents a time zone.
+    pub fn new() -> TimeZoneDescriptor {
+        TimeZoneDescriptor {
+            id: None,
+            presentation: None,
+            offset: None,
+            dollar_type: None,
+        }
+    }
+}
 

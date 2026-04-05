@@ -26,18 +26,18 @@ pub struct Project {
     pub created_by: Option<Box<models::User>>,
     #[serde(rename = "customFields", skip_serializing_if = "Option::is_none")]
     pub custom_fields: Option<serde_json::Value>,
-    #[serde(rename = "description", skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
     #[serde(rename = "fromEmail", skip_serializing_if = "Option::is_none")]
     pub from_email: Option<String>,
-    #[serde(rename = "iconUrl", skip_serializing_if = "Option::is_none")]
-    pub icon_url: Option<String>,
+    #[serde(rename = "iconUrl", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub icon_url: Option<Option<String>>,
     #[serde(rename = "issues", skip_serializing_if = "Option::is_none")]
     pub issues: Option<Vec<models::Issue>>,
     #[serde(rename = "leader", skip_serializing_if = "Option::is_none")]
     pub leader: Option<Box<models::User>>,
-    #[serde(rename = "replyToEmail", skip_serializing_if = "Option::is_none")]
-    pub reply_to_email: Option<String>,
+    #[serde(rename = "replyToEmail", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub reply_to_email: Option<Option<String>>,
     #[serde(rename = "shortName", skip_serializing_if = "Option::is_none")]
     pub short_name: Option<String>,
     #[serde(rename = "startingNumber", skip_serializing_if = "Option::is_none")]

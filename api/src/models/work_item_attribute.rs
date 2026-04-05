@@ -12,11 +12,33 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// WorkItemAttribute : Represents the attribute of a specific work item.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum WorkItemAttribute {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct WorkItemAttribute {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "workItem", skip_serializing_if = "Option::is_none")]
+    pub work_item: Option<Box<models::BaseWorkItem>>,
+    #[serde(rename = "projectAttribute", skip_serializing_if = "Option::is_none")]
+    pub project_attribute: Option<Box<models::WorkItemProjectAttribute>>,
+    #[serde(rename = "value", skip_serializing_if = "Option::is_none")]
+    pub value: Option<Box<models::WorkItemAttributeValue>>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl WorkItemAttribute {
+    /// Represents the attribute of a specific work item.
+    pub fn new() -> WorkItemAttribute {
+        WorkItemAttribute {
+            id: None,
+            work_item: None,
+            project_attribute: None,
+            value: None,
+            name: None,
+            dollar_type: None,
+        }
+    }
+}
 

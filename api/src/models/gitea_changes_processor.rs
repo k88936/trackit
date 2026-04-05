@@ -32,10 +32,10 @@ pub struct GiteaChangesProcessor {
     pub lookup_issues_in_branch_name: Option<bool>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub dollar_type: Option<String>,
-    #[serde(rename = "path", skip_serializing_if = "Option::is_none")]
-    pub path: Option<String>,
-    #[serde(rename = "branchSpecification", skip_serializing_if = "Option::is_none")]
-    pub branch_specification: Option<String>,
+    #[serde(rename = "path", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub path: Option<Option<String>>,
+    #[serde(rename = "branchSpecification", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub branch_specification: Option<Option<String>>,
     #[serde(rename = "committers", skip_serializing_if = "Option::is_none")]
     pub committers: Option<Box<models::UserGroup>>,
 }

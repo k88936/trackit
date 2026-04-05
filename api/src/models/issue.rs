@@ -12,11 +12,102 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Issue : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Issue {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Issue {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "attachments", skip_serializing_if = "Option::is_none")]
+    pub attachments: Option<Vec<models::IssueAttachment>>,
+    #[serde(rename = "comments", skip_serializing_if = "Option::is_none")]
+    pub comments: Option<Vec<models::IssueComment>>,
+    #[serde(rename = "commentsCount", skip_serializing_if = "Option::is_none")]
+    pub comments_count: Option<i32>,
+    #[serde(rename = "created", skip_serializing_if = "Option::is_none")]
+    pub created: Option<i64>,
+    #[serde(rename = "customFields", skip_serializing_if = "Option::is_none")]
+    pub custom_fields: Option<Vec<models::IssueCustomField>>,
+    #[serde(rename = "description", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub description: Option<Option<String>>,
+    #[serde(rename = "draftOwner", skip_serializing_if = "Option::is_none")]
+    pub draft_owner: Option<Box<models::User>>,
+    #[serde(rename = "externalIssue", skip_serializing_if = "Option::is_none")]
+    pub external_issue: Option<Box<models::ExternalIssue>>,
+    #[serde(rename = "idReadable", skip_serializing_if = "Option::is_none")]
+    pub id_readable: Option<String>,
+    #[serde(rename = "isDraft", skip_serializing_if = "Option::is_none")]
+    pub is_draft: Option<bool>,
+    #[serde(rename = "links", skip_serializing_if = "Option::is_none")]
+    pub links: Option<Vec<models::IssueLink>>,
+    #[serde(rename = "numberInProject", skip_serializing_if = "Option::is_none")]
+    pub number_in_project: Option<i64>,
+    #[serde(rename = "parent", skip_serializing_if = "Option::is_none")]
+    pub parent: Option<Box<models::IssueLink>>,
+    #[serde(rename = "pinnedComments", skip_serializing_if = "Option::is_none")]
+    pub pinned_comments: Option<Vec<models::IssueComment>>,
+    #[serde(rename = "project", skip_serializing_if = "Option::is_none")]
+    pub project: Option<Box<models::Project>>,
+    #[serde(rename = "reporter", skip_serializing_if = "Option::is_none")]
+    pub reporter: Option<Box<models::User>>,
+    #[serde(rename = "resolved", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub resolved: Option<Option<i64>>,
+    #[serde(rename = "subtasks", skip_serializing_if = "Option::is_none")]
+    pub subtasks: Option<Box<models::IssueLink>>,
+    #[serde(rename = "summary", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub summary: Option<Option<String>>,
+    #[serde(rename = "tags", skip_serializing_if = "Option::is_none")]
+    pub tags: Option<Vec<models::Tag>>,
+    #[serde(rename = "updated", skip_serializing_if = "Option::is_none")]
+    pub updated: Option<i64>,
+    #[serde(rename = "updater", skip_serializing_if = "Option::is_none")]
+    pub updater: Option<Box<models::User>>,
+    #[serde(rename = "visibility", skip_serializing_if = "Option::is_none")]
+    pub visibility: Option<Box<models::Visibility>>,
+    #[serde(rename = "voters", skip_serializing_if = "Option::is_none")]
+    pub voters: Option<Box<models::IssueVoters>>,
+    #[serde(rename = "votes", skip_serializing_if = "Option::is_none")]
+    pub votes: Option<i32>,
+    #[serde(rename = "watchers", skip_serializing_if = "Option::is_none")]
+    pub watchers: Option<Box<models::IssueWatchers>>,
+    #[serde(rename = "wikifiedDescription", skip_serializing_if = "Option::is_none")]
+    pub wikified_description: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Issue {
+    /// 
+    pub fn new() -> Issue {
+        Issue {
+            id: None,
+            attachments: None,
+            comments: None,
+            comments_count: None,
+            created: None,
+            custom_fields: None,
+            description: None,
+            draft_owner: None,
+            external_issue: None,
+            id_readable: None,
+            is_draft: None,
+            links: None,
+            number_in_project: None,
+            parent: None,
+            pinned_comments: None,
+            project: None,
+            reporter: None,
+            resolved: None,
+            subtasks: None,
+            summary: None,
+            tags: None,
+            updated: None,
+            updater: None,
+            visibility: None,
+            voters: None,
+            votes: None,
+            watchers: None,
+            wikified_description: None,
+            dollar_type: None,
+        }
+    }
+}
 

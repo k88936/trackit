@@ -12,11 +12,27 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// FieldStyle : Represents the style settings of the field in YouTrack.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum FieldStyle {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct FieldStyle {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "background", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub background: Option<Option<String>>,
+    #[serde(rename = "foreground", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub foreground: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl FieldStyle {
+    /// Represents the style settings of the field in YouTrack.
+    pub fn new() -> FieldStyle {
+        FieldStyle {
+            id: None,
+            background: None,
+            foreground: None,
+            dollar_type: None,
+        }
+    }
+}
 

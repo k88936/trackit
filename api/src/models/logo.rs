@@ -12,11 +12,24 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Logo : Company logo that is used in YouTrack.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Logo {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Logo {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "url", skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Logo {
+    /// Company logo that is used in YouTrack.
+    pub fn new() -> Logo {
+        Logo {
+            id: None,
+            url: None,
+            dollar_type: None,
+        }
+    }
+}
 

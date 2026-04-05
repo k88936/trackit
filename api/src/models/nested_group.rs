@@ -11,29 +11,45 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// NestedGroup : Represents a group of users.
+/// NestedGroup : Represents a user group in YouTrack that either has a parent or subgroups.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct NestedGroup {
     #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    #[serde(rename = "ringId", skip_serializing_if = "Option::is_none")]
-    pub ring_id: Option<String>,
+    #[serde(rename = "ringId", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub ring_id: Option<Option<String>>,
     #[serde(rename = "usersCount", skip_serializing_if = "Option::is_none")]
     pub users_count: Option<i64>,
-    #[serde(rename = "icon", skip_serializing_if = "Option::is_none")]
-    pub icon: Option<String>,
+    #[serde(rename = "icon", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub icon: Option<Option<String>>,
     #[serde(rename = "allUsersGroup", skip_serializing_if = "Option::is_none")]
     pub all_users_group: Option<bool>,
-    #[serde(rename = "teamForProject", skip_serializing_if = "Option::is_none")]
-    pub team_for_project: Option<Box<models::Project>>,
+    #[serde(rename = "users", skip_serializing_if = "Option::is_none")]
+    pub users: Option<Vec<models::User>>,
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub dollar_type: Option<String>,
+    #[serde(rename = "parentGroup", skip_serializing_if = "Option::is_none")]
+    pub parent_group: Option<Box<models::NestedGroup>>,
+    #[serde(rename = "subGroups", skip_serializing_if = "Option::is_none")]
+    pub sub_groups: Option<Box<models::NestedGroup>>,
+    #[serde(rename = "ownUsers", skip_serializing_if = "Option::is_none")]
+    pub own_users: Option<Box<models::User>>,
+    #[serde(rename = "requireTwoFactorAuthentication", skip_serializing_if = "Option::is_none")]
+    pub require_two_factor_authentication: Option<bool>,
+    #[serde(rename = "viewers", skip_serializing_if = "Option::is_none")]
+    pub viewers: Option<serde_json::Value>,
+    #[serde(rename = "updaters", skip_serializing_if = "Option::is_none")]
+    pub updaters: Option<serde_json::Value>,
+    #[serde(rename = "autoJoin", skip_serializing_if = "Option::is_none")]
+    pub auto_join: Option<bool>,
+    #[serde(rename = "autoJoinDomain", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub auto_join_domain: Option<Option<String>>,
 }
 
 impl NestedGroup {
-    /// Represents a group of users.
+    /// Represents a user group in YouTrack that either has a parent or subgroups.
     pub fn new() -> NestedGroup {
         NestedGroup {
             id: None,
@@ -42,8 +58,16 @@ impl NestedGroup {
             users_count: None,
             icon: None,
             all_users_group: None,
-            team_for_project: None,
+            users: None,
             dollar_type: None,
+            parent_group: None,
+            sub_groups: None,
+            own_users: None,
+            require_two_factor_authentication: None,
+            viewers: None,
+            updaters: None,
+            auto_join: None,
+            auto_join_domain: None,
         }
     }
 }

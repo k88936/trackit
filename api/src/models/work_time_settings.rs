@@ -12,11 +12,33 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// WorkTimeSettings : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum WorkTimeSettings {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct WorkTimeSettings {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "minutesADay", skip_serializing_if = "Option::is_none")]
+    pub minutes_a_day: Option<i32>,
+    #[serde(rename = "workDays", skip_serializing_if = "Option::is_none")]
+    pub work_days: Option<Vec<i32>>,
+    #[serde(rename = "firstDayOfWeek", skip_serializing_if = "Option::is_none")]
+    pub first_day_of_week: Option<i32>,
+    #[serde(rename = "daysAWeek", skip_serializing_if = "Option::is_none")]
+    pub days_a_week: Option<i32>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl WorkTimeSettings {
+    /// 
+    pub fn new() -> WorkTimeSettings {
+        WorkTimeSettings {
+            id: None,
+            minutes_a_day: None,
+            work_days: None,
+            first_day_of_week: None,
+            days_a_week: None,
+            dollar_type: None,
+        }
+    }
+}
 

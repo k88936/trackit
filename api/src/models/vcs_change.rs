@@ -12,11 +12,51 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// VcsChange : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum VcsChange {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct VcsChange {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "date", skip_serializing_if = "Option::is_none")]
+    pub date: Option<i64>,
+    #[serde(rename = "fetched", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub fetched: Option<Option<i64>>,
+    #[serde(rename = "files", skip_serializing_if = "Option::is_none")]
+    pub files: Option<i32>,
+    #[serde(rename = "author", skip_serializing_if = "Option::is_none")]
+    pub author: Option<Box<models::User>>,
+    #[serde(rename = "processors", skip_serializing_if = "Option::is_none")]
+    pub processors: Option<Vec<models::ChangesProcessor>>,
+    #[serde(rename = "text", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub text: Option<Option<String>>,
+    #[serde(rename = "urls", skip_serializing_if = "Option::is_none")]
+    pub urls: Option<Vec<String>>,
+    #[serde(rename = "version", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub version: Option<Option<String>>,
+    #[serde(rename = "issue", skip_serializing_if = "Option::is_none")]
+    pub issue: Option<Box<models::Issue>>,
+    #[serde(rename = "state", skip_serializing_if = "Option::is_none")]
+    pub state: Option<i32>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl VcsChange {
+    /// 
+    pub fn new() -> VcsChange {
+        VcsChange {
+            id: None,
+            date: None,
+            fetched: None,
+            files: None,
+            author: None,
+            processors: None,
+            text: None,
+            urls: None,
+            version: None,
+            issue: None,
+            state: None,
+            dollar_type: None,
+        }
+    }
+}
 

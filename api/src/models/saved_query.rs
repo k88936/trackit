@@ -30,8 +30,8 @@ pub struct SavedQuery {
     pub read_sharing_settings: Option<Box<models::WatchFolderSharingSettings>>,
     #[serde(rename = "updateSharingSettings", skip_serializing_if = "Option::is_none")]
     pub update_sharing_settings: Option<Box<models::WatchFolderSharingSettings>>,
-    #[serde(rename = "query", skip_serializing_if = "Option::is_none")]
-    pub query: Option<String>,
+    #[serde(rename = "query", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub query: Option<Option<String>>,
     #[serde(rename = "issues", skip_serializing_if = "Option::is_none")]
     pub issues: Option<Vec<models::Issue>>,
 }

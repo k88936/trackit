@@ -12,11 +12,30 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// ExternalArticle : For an article that was imported from another service, this entity represents the reference to the article in the external system.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum ExternalArticle {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ExternalArticle {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "url", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub url: Option<Option<String>>,
+    #[serde(rename = "key", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub key: Option<Option<String>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl ExternalArticle {
+    /// For an article that was imported from another service, this entity represents the reference to the article in the external system.
+    pub fn new() -> ExternalArticle {
+        ExternalArticle {
+            id: None,
+            name: None,
+            url: None,
+            key: None,
+            dollar_type: None,
+        }
+    }
+}
 

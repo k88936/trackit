@@ -12,11 +12,36 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// SearchSuggestions : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum SearchSuggestions {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct SearchSuggestions {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "caret", skip_serializing_if = "Option::is_none")]
+    pub caret: Option<i32>,
+    #[serde(rename = "ignoreUnresolvedSetting", skip_serializing_if = "Option::is_none")]
+    pub ignore_unresolved_setting: Option<bool>,
+    #[serde(rename = "query", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub query: Option<Option<String>>,
+    #[serde(rename = "suggestions", skip_serializing_if = "Option::is_none")]
+    pub suggestions: Option<Vec<models::Suggestion>>,
+    #[serde(rename = "folders", skip_serializing_if = "Option::is_none")]
+    pub folders: Option<Vec<models::IssueFolder>>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl SearchSuggestions {
+    /// 
+    pub fn new() -> SearchSuggestions {
+        SearchSuggestions {
+            id: None,
+            caret: None,
+            ignore_unresolved_setting: None,
+            query: None,
+            suggestions: None,
+            folders: None,
+            dollar_type: None,
+        }
+    }
+}
 

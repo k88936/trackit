@@ -12,11 +12,90 @@ use crate::models;
 use serde::{Deserialize, Serialize};
 
 /// Telemetry : 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "$type")]
-pub enum Telemetry {
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct Telemetry {
+    #[serde(rename = "id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(rename = "installationFolder", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub installation_folder: Option<Option<String>>,
+    #[serde(rename = "databaseLocation", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub database_location: Option<Option<String>>,
+    #[serde(rename = "logsLocation", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub logs_location: Option<Option<String>>,
+    #[serde(rename = "availableProcessors", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub available_processors: Option<Option<i32>>,
+    #[serde(rename = "availableMemory", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub available_memory: Option<Option<String>>,
+    #[serde(rename = "allocatedMemory", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub allocated_memory: Option<Option<String>>,
+    #[serde(rename = "usedMemory", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub used_memory: Option<Option<String>>,
+    #[serde(rename = "uptime", skip_serializing_if = "Option::is_none")]
+    pub uptime: Option<String>,
+    #[serde(rename = "startedTime", skip_serializing_if = "Option::is_none")]
+    pub started_time: Option<i64>,
+    #[serde(rename = "databaseBackgroundThreads", skip_serializing_if = "Option::is_none")]
+    pub database_background_threads: Option<i32>,
+    #[serde(rename = "pendingAsyncJobs", skip_serializing_if = "Option::is_none")]
+    pub pending_async_jobs: Option<i32>,
+    #[serde(rename = "cachedResultsCountInDBQueriesCache", skip_serializing_if = "Option::is_none")]
+    pub cached_results_count_in_db_queries_cache: Option<i32>,
+    #[serde(rename = "databaseQueriesCacheHitRate", skip_serializing_if = "Option::is_none")]
+    pub database_queries_cache_hit_rate: Option<String>,
+    #[serde(rename = "blobStringsCacheHitRate", skip_serializing_if = "Option::is_none")]
+    pub blob_strings_cache_hit_rate: Option<String>,
+    #[serde(rename = "totalTransactions", skip_serializing_if = "Option::is_none")]
+    pub total_transactions: Option<i64>,
+    #[serde(rename = "transactionsPerSecond", skip_serializing_if = "Option::is_none")]
+    pub transactions_per_second: Option<String>,
+    #[serde(rename = "requestsPerSecond", skip_serializing_if = "Option::is_none")]
+    pub requests_per_second: Option<String>,
+    #[serde(rename = "databaseSize", skip_serializing_if = "Option::is_none")]
+    pub database_size: Option<String>,
+    #[serde(rename = "fullDatabaseSize", skip_serializing_if = "Option::is_none")]
+    pub full_database_size: Option<String>,
+    #[serde(rename = "textIndexSize", skip_serializing_if = "Option::is_none")]
+    pub text_index_size: Option<String>,
+    #[serde(rename = "onlineUsers", skip_serializing_if = "Option::is_none")]
+    pub online_users: Option<Box<models::OnlineUsers>>,
+    #[serde(rename = "reportCalculatorThreads", skip_serializing_if = "Option::is_none")]
+    pub report_calculator_threads: Option<i32>,
+    #[serde(rename = "notificationAnalyzerThreads", skip_serializing_if = "Option::is_none")]
+    pub notification_analyzer_threads: Option<i32>,
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
+    pub dollar_type: Option<String>,
 }
 
-
-
+impl Telemetry {
+    /// 
+    pub fn new() -> Telemetry {
+        Telemetry {
+            id: None,
+            installation_folder: None,
+            database_location: None,
+            logs_location: None,
+            available_processors: None,
+            available_memory: None,
+            allocated_memory: None,
+            used_memory: None,
+            uptime: None,
+            started_time: None,
+            database_background_threads: None,
+            pending_async_jobs: None,
+            cached_results_count_in_db_queries_cache: None,
+            database_queries_cache_hit_rate: None,
+            blob_strings_cache_hit_rate: None,
+            total_transactions: None,
+            transactions_per_second: None,
+            requests_per_second: None,
+            database_size: None,
+            full_database_size: None,
+            text_index_size: None,
+            online_users: None,
+            report_calculator_threads: None,
+            notification_analyzer_threads: None,
+            dollar_type: None,
+        }
+    }
+}
 
