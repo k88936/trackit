@@ -1,8 +1,7 @@
-mod error;
-mod config;
-mod client;
-mod output;
 mod cli;
+mod config;
+mod error;
+mod output;
 
 use clap::{Parser, Subcommand};
 use cli::run_setup_wizard;
@@ -18,10 +17,20 @@ struct Cli {
     #[arg(long, global = true, help = "Use specific config file")]
     config: Option<String>,
 
-    #[arg(long, global = true, help = "Override YouTrack URL", env = "YOUTRACK_URL")]
+    #[arg(
+        long,
+        global = true,
+        help = "Override YouTrack URL",
+        env = "YOUTRACK_URL"
+    )]
     url: Option<String>,
 
-    #[arg(long, global = true, help = "Override API token", env = "YOUTRACK_TOKEN")]
+    #[arg(
+        long,
+        global = true,
+        help = "Override API token",
+        env = "YOUTRACK_TOKEN"
+    )]
     token: Option<String>,
 
     #[command(subcommand)]
