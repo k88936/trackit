@@ -30,7 +30,7 @@ impl YouTrackClient {
         token_override: Option<String>,
     ) -> Result<Self> {
         let url = url_override
-            .or_else(|| config.url.clone())
+            .or_else(|| config.server_url.clone())
             .or_else(|| std::env::var("YOUTRACK_URL").ok())
             .ok_or_else(|| {
                 TrackItError::MissingConfig("YouTrack URL not configured".to_string())

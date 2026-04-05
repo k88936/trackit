@@ -5,7 +5,7 @@ mod output;
 mod cli;
 
 use clap::{Parser, Subcommand};
-use cli::{ConfigCommand, handle_config_command};
+use cli::run_setup_wizard;
 
 #[derive(Parser)]
 #[command(name = "trackit")]
@@ -30,11 +30,8 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    #[command(about = "Configuration management")]
-    Config {
-        #[command(subcommand)]
-        command: ConfigCommand,
-    },
+    #[command(about = "Interactive setup wizard")]
+    SetupWizard,
 }
 
 #[tokio::main]
@@ -42,9 +39,7 @@ async fn main() -> error::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Config { command } => {
-            handle_config_command(command).await?;
-        }
+        Commands::SetupWizard => run_setup_wizard().await?,
     }
 
     Ok(())

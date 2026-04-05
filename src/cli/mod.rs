@@ -1,3 +1,3 @@
-mod config;
+mod setup_wizard;
 
-pub use config::*;
+pub use setup_wizard::*;
