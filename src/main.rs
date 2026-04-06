@@ -3,8 +3,8 @@ mod cli;
 mod config;
 mod error;
 mod output;
-mod youtrack;
 pub mod utils;
+mod youtrack;
 
 use clap::Parser;
 
@@ -17,12 +17,12 @@ use crate::app::render_basic::{
     render_comment, render_me, render_project_custom_fields, render_projects,
 };
 use crate::app::render_issue::{render_issue_detail, render_issues};
-use utils::text::{decode_cli_escapes, read_text_file};
 use crate::cli::run_setup_wizard;
 use crate::error::TrackItError;
 use app::args::Cli;
 use app::context::GlobalOpts;
 use error::Result;
+use utils::text::{decode_cli_escapes, read_text_file};
 
 #[tokio::main]
 async fn main() -> Result<()> {

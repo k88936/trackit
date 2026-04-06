@@ -1,17 +1,18 @@
 use crate::error::{Result, TrackItError};
+use crate::utils::text;
 
 pub fn build_issue_query(project: Option<&str>, filters: &[(String, String)]) -> Option<String> {
     let mut parts = Vec::new();
 
     if let Some(project) = project {
-        parts.push(format!("project:{}", quote_query_value(project)));
+        parts.push(format!("project:{}", text::quote_query_value(project)));
     }
 
     for (key, value) in filters {
         parts.push(format!(
             "{}:{}",
-            quote_query_field_name(key),
-            quote_query_value(value)
+            text::quote_query_field_name(key),
+            text::quote_query_value(value)
         ));
     }
 
@@ -81,18 +82,22 @@ fn parse_key_value_spec(value: &str, flag_name: &str) -> Result<(String, String)
     Ok((key.to_string(), parsed_value.to_string()))
 }
 
-fn quote_query_field_name(value: &str) -> String {
-    if value.chars().any(|c| c.is_whitespace() || c == '"') {
-        format!("\"{}\"", value.replace('"', "\\\""))
-    } else {
-        value.to_string()
-    }
-}
+#[cfg(test)]
+mod tests {
+    use super::build_issue_query;
 
-fn quote_query_value(value: &str) -> String {
-    if value.chars().any(char::is_whitespace) {
-        format!("\"{}\"", value.replace('"', "\\\""))
-    } else {
-        value.to_string()
+    #[test]
+    fn builds_query_with_braced_value_for_spaces() {
+        let query = build_issue_query(Some("TAL"), &[("State".to_string(), "To do".to_string())]);
+        assert_eq!(query.as_deref(), Some("project:TAL State:{To do}"));
+    }
+
+    #[test]
+    fn keeps_non_spaced_value_unwrapped() {
+        let query = build_issue_query(
+            Some("TAL"),
+            &[("Priority".to_string(), "Normal".to_string())],
+        );
+        assert_eq!(query.as_deref(), Some("project:TAL Priority:Normal"));
     }
 }

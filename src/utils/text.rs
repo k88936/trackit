@@ -1,7 +1,7 @@
+use crate::error::{Result, TrackItError};
+use api::apis::Error as ApiError;
 use std::fs;
 use std::path::Path;
-use api::apis::Error as ApiError;
-use crate::error::{Result, TrackItError};
 
 pub fn decode_cli_escapes(value: &str) -> String {
     let mut decoded = String::with_capacity(value.len());
@@ -91,4 +91,26 @@ pub(crate) fn quote_command_part(value: &str) -> String {
     } else {
         trimmed.to_string()
     }
+}
+
+pub fn quote_query_field_name(value: &str) -> String {
+    if value.chars().any(|c| c.is_whitespace() || c == '"') {
+        format!("\"{}\"", value.replace('"', "\\\""))
+    } else {
+        value.to_string()
+    }
+}
+
+pub fn quote_query_value(value: &str) -> String {
+    let trimmed = value.trim();
+    if trimmed.starts_with('{') && trimmed.ends_with('}') {
+        return trimmed.to_string();
+    }
+    if trimmed.chars().any(char::is_whitespace) {
+        return format!("{{{trimmed}}}");
+    }
+    if trimmed.contains('"') {
+        return format!("\"{}\"", trimmed.replace('"', "\\\""));
+    }
+    trimmed.to_string()
 }

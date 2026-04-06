@@ -1,8 +1,8 @@
+use crate::error::Result;
+use crate::utils::text::{map_api_error, quote_command_part};
 use api::apis::default_api;
 use api::models;
 use std::collections::BTreeSet;
-use crate::utils::text::{map_api_error, quote_command_part};
-use crate::error::Result;
 
 use super::client::YouTrackClient;
 use super::project_field_helpers::project_custom_field_type_id;
@@ -18,7 +18,7 @@ impl YouTrackClient {
 
     pub async fn list_issues(
         &self,
-        query: Option<&str>,
+        filter: Option<&str>,
         project: Option<&str>,
         skip: Option<i32>,
         top: Option<i32>,
@@ -28,7 +28,7 @@ impl YouTrackClient {
             .await;
         default_api::issues_get(
             &self.configuration,
-            query,
+            filter,
             None,
             Some(fields.as_str()),
             skip,
