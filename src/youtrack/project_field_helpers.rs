@@ -32,6 +32,12 @@ pub(super) fn project_custom_field_name(field: &models::ProjectCustomField) -> O
         .filter(|name| !name.is_empty())
 }
 
+pub(super) fn project_custom_field_type_id(field: &models::ProjectCustomField) -> Option<&str> {
+    project_custom_field_def(field)
+        .and_then(|custom| custom.field_type.as_deref())
+        .and_then(|field_type| field_type.id.as_deref())
+}
+
 pub(super) fn extract_custom_field_values_from_json(payload: &serde_json::Value) -> Vec<String> {
     let mut values = Vec::new();
 

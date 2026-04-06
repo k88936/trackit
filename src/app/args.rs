@@ -135,7 +135,7 @@ pub struct IssueCreateArgs {
     #[arg(
         long = "link",
         value_name = "RELATION:ISSUE",
-        help = "Add an issue link, can be provided multiple times"
+        help = "Add an issue link, can be provided multiple times. possible RELATION values include `relates to`, `duplicates`, `is duplicated by`, `depends on`, `is required for`, `subtask of`, `parent for`"
     )]
     pub links: Vec<String>,
 }
@@ -153,13 +153,13 @@ pub struct IssueUpdateArgs {
     #[arg(
         long = "link",
         value_name = "RELATION:ISSUE",
-        help = "Add an issue link, can be provided multiple times"
+        help = "Add an issue link, can be provided multiple times. possible RELATION values include `relates to`, `duplicates`, `is duplicated by`, `depends on`, `is required for`, `subtask of`, `parent for`"
     )]
     pub link: Vec<String>,
     #[arg(
         long = "unlink",
         value_name = "RELATION:ISSUE",
-        help = "Remove an issue link, can be provided multiple times"
+        help = "Remove an issue link, can be provided multiple times. possible RELATION values include `relates to`, `duplicates`, `is duplicated by`, `depends on`, `is required for`, `subtask of`, `parent for`"
     )]
     pub unlink: Vec<String>,
 }

@@ -4,7 +4,7 @@ use tabled::Tabled;
 use crate::error::Result;
 use crate::output::{format_json, format_table};
 
-use super::issue_fields::issue_custom_field;
+use super::issue_fields::issue_custom_fields;
 use super::render_basic::{opt_nested_str, opt_str};
 
 #[derive(Serialize, Tabled)]
@@ -12,10 +12,7 @@ struct IssueRow {
     id_readable: String,
     summary: String,
     project: String,
-    assignee: String,
-    state: String,
-    priority: String,
-    issue_type: String,
+    fields: String,
     updated: String,
 }
 
@@ -42,10 +39,7 @@ pub fn render_issues(issues: &[api::models::Issue], as_json: bool) -> Result<()>
                     }
                 })
                 .unwrap_or_default(),
-            assignee: issue_custom_field(issue, "Assignee"),
-            state: issue_custom_field(issue, "State"),
-            priority: issue_custom_field(issue, "Priority"),
-            issue_type: issue_custom_field(issue, "Type"),
+            fields: summarize_issue_fields(issue),
             updated: issue.updated.map(|t| t.to_string()).unwrap_or_default(),
         })
         .collect();
@@ -80,10 +74,19 @@ pub fn render_issue_detail(issue: &api::models::Issue, as_json: bool) -> Result<
             opt_str(&project.short_name)
         );
     }
-    println!("assignee: {}", issue_custom_field(issue, "Assignee"));
-    println!("state: {}", issue_custom_field(issue, "State"));
-    println!("priority: {}", issue_custom_field(issue, "Priority"));
-    println!("type: {}", issue_custom_field(issue, "Type"));
+    let fields = issue_custom_fields(issue);
+    if fields.is_empty() {
+        println!("fields: (none)");
+    } else {
+        println!("fields:");
+        for (name, value) in fields {
+            if value.is_empty() {
+                println!("  - {name}:");
+            } else {
+                println!("  - {name}: {value}");
+            }
+        }
+    }
     if let Some(tags) = &issue.tags {
         let names: Vec<String> = tags.iter().map(|tag| opt_str(&tag.name)).collect();
         println!("tags: {}", names.join(", "));
@@ -91,6 +94,37 @@ pub fn render_issue_detail(issue: &api::models::Issue, as_json: bool) -> Result<
     render_issue_links(issue);
 
     Ok(())
+}
+
+fn summarize_issue_fields(issue: &api::models::Issue) -> String {
+    let pairs = issue_custom_fields(issue);
+    if pairs.is_empty() {
+        return String::new();
+    }
+
+    let summary = pairs
+        .into_iter()
+        .map(|(name, value)| {
+            if value.is_empty() {
+                name
+            } else {
+                format!("{name}={value}")
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("; ");
+
+    const LIMIT: usize = 80;
+    if summary.chars().count() > LIMIT {
+        let mut out = String::new();
+        for ch in summary.chars().take(LIMIT - 3) {
+            out.push(ch);
+        }
+        out.push_str("...");
+        out
+    } else {
+        summary
+    }
 }
 
 fn render_issue_links(issue: &api::models::Issue) {

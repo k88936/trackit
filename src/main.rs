@@ -67,7 +67,9 @@ async fn main() -> Result<()> {
                 } => {
                     let parsed_filters = parse_key_value_specs(&filters, "--filter")?;
                     let query = build_issue_query(project.as_deref(), &parsed_filters);
-                    let issues = client.list_issues(query.as_deref(), skip, top).await?;
+                    let issues = client
+                        .list_issues(query.as_deref(), project.as_deref(), skip, top)
+                        .await?;
                     render_issues(&issues, global.json)?;
                 }
                 IssueCommands::Get { id } => {
@@ -75,6 +77,7 @@ async fn main() -> Result<()> {
                     render_issue_detail(&issue, global.json)?;
                 }
                 IssueCommands::Create(args) => {
+                    let assignments = parse_key_value_specs(&args.fields, "--field")?;
                     let issue = client
                         .create_issue(&args.project, &args.summary, args.description.as_deref())
                         .await?;
@@ -89,6 +92,10 @@ async fn main() -> Result<()> {
                                         .to_string(),
                                 )
                             })?;
+
+                    for (key, value) in assignments {
+                        client.update_issue_field(&issue_ref, &key, &value).await?;
+                    }
 
                     for link in &args.links {
                         let (relation, target) = parse_link_spec(link)?;

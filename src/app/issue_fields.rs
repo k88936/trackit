@@ -1,22 +1,24 @@
-pub fn issue_custom_field(issue: &api::models::Issue, field_name: &str) -> String {
+pub fn issue_custom_fields(issue: &api::models::Issue) -> Vec<(String, String)> {
     let Some(custom_fields) = &issue.custom_fields else {
-        return String::new();
+        return Vec::new();
     };
 
+    let mut out = Vec::new();
     for field in custom_fields {
         let (name, value) = issue_custom_field_parts(field);
-        if name
-            .map(|n| n.eq_ignore_ascii_case(field_name))
-            .unwrap_or(false)
-        {
-            if let Some(value) = value {
-                return custom_field_value_to_string(value);
-            }
-            return String::new();
+        let name = name.map(|v| v.trim()).unwrap_or_default();
+        if name.is_empty() {
+            continue;
         }
+
+        let value = value
+            .map(custom_field_value_to_string)
+            .unwrap_or_else(String::new);
+        out.push((name.to_string(), value));
     }
 
-    String::new()
+    out.sort_by(|a, b| a.0.to_ascii_lowercase().cmp(&b.0.to_ascii_lowercase()));
+    out
 }
 
 fn issue_custom_field_parts(
@@ -62,7 +64,17 @@ fn custom_field_value_to_string(value: &serde_json::Value) -> String {
             .collect::<Vec<_>>()
             .join(", "),
         serde_json::Value::Object(map) => {
-            for key in ["name", "fullName", "login", "idReadable", "id"] {
+            for key in [
+                "name",
+                "localizedName",
+                "fullName",
+                "login",
+                "idReadable",
+                "presentation",
+                "text",
+                "minutes",
+                "id",
+            ] {
                 if let Some(v) = map.get(key) {
                     let text = custom_field_value_to_string(v);
                     if !text.is_empty() {
