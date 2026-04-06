@@ -13,6 +13,12 @@ const ISSUE_CREATE_FIELDS: &str = "id,idReadable,summary,description";
 const ISSUE_COMMENT_FIELDS: &str = "id,text,author(id,login,fullName),created";
 const ISSUE_LINKS_FIELDS: &str = "id,direction,linkType(name,sourceToTarget,targetToSource),issues(id,idReadable,summary),trimmedIssues(id,idReadable,summary)";
 
+#[derive(Clone, Debug)]
+pub struct ProjectFieldSuggestion {
+    pub name: String,
+    pub values: Vec<String>,
+}
+
 pub struct YouTrackClient {
     configuration: Configuration,
 }
@@ -117,56 +123,13 @@ impl YouTrackClient {
             .map_err(map_api_error)
     }
 
-    pub async fn assign_issue(&self, id: &str, user: &str) -> Result<()> {
-        self.run_issue_command(id, &format!("Assignee {}", user))
-            .await
-    }
-
-    pub async fn update_issue_state(&self, id: &str, state: &str) -> Result<()> {
-        self.run_issue_command(id, &format!("State {}", state))
-            .await
-    }
-
-    pub async fn update_issue_project(&self, id: &str, project: &str) -> Result<()> {
-        self.run_issue_command(id, &format!("project {}", project))
-            .await
-    }
-
-    pub async fn update_issue_priority(&self, id: &str, priority: &str) -> Result<()> {
-        self.run_issue_command(id, &format!("Priority {}", priority))
-            .await
-    }
-
-    pub async fn update_issue_type(&self, id: &str, issue_type: &str) -> Result<()> {
-        self.run_issue_command(id, &format!("Type {}", issue_type))
-            .await
-    }
-
-    pub async fn update_issue_text(
-        &self,
-        id: &str,
-        summary: Option<&str>,
-        description: Option<&str>,
-    ) -> Result<models::Issue> {
-        let mut issue = models::Issue::new();
-
-        if let Some(summary) = summary {
-            issue.summary = Some(Some(summary.to_string()));
-        }
-
-        if let Some(description) = description {
-            issue.description = Some(Some(description.to_string()));
-        }
-
-        default_api::issues_id_post(
-            &self.configuration,
-            id,
-            None,
-            Some(ISSUE_DETAIL_FIELDS),
-            Some(issue),
-        )
-        .await
-        .map_err(map_api_error)
+    pub async fn update_issue_field(&self, id: &str, key: &str, value: &str) -> Result<()> {
+        let command = format!(
+            "{} {}",
+            quote_command_part(key),
+            quote_command_part(value)
+        );
+        self.run_issue_command(id, &command).await
     }
 
     pub async fn list_project_values(&self) -> Result<Vec<String>> {
@@ -196,60 +159,34 @@ impl YouTrackClient {
         Ok(values)
     }
 
-    pub async fn suggest_list_values_for_project(
+    pub async fn list_project_custom_field_suggestions(
         &self,
         project: &str,
-        field: &str,
-    ) -> Result<Vec<String>> {
-        let Some(project_field) = self.resolve_project_field_name(project, field).await? else {
-            return Ok(Vec::new());
-        };
-        let query = format!(
-            "project:{} {}: ",
-            quote_search_query_value(project),
-            quote_search_field_name(&project_field)
-        );
-        let mut payload = models::SearchSuggestions::new();
-        payload.query = Some(Some(query.clone()));
-        payload.caret = Some(query.len() as i32);
+    ) -> Result<Vec<ProjectFieldSuggestion>> {
+        let project_id = self.resolve_project_id(project).await?;
+        let custom_fields = self.fetch_project_custom_fields(&project_id).await?;
+        let mut suggestions = Vec::new();
 
-        let response = default_api::search_assist_post(
-            &self.configuration,
-            Some("suggestions(option,description)"),
-            Some(payload),
-        )
-        .await
-        .map_err(map_api_error)?;
+        for field in custom_fields {
+            let Some(name) = project_custom_field_name(&field) else {
+                continue;
+            };
+            let Some(field_id) = project_custom_field_id(&field) else {
+                continue;
+            };
+            let values = self
+                .fetch_project_custom_field_value_labels(&project_id, field_id)
+                .await
+                .unwrap_or_default();
+            suggestions.push(ProjectFieldSuggestion {
+                name,
+                values: normalize_values(values),
+            });
+        }
 
-        Ok(extract_suggestion_values(response.suggestions))
-    }
-
-    pub async fn suggest_update_values_for_project(
-        &self,
-        project: &str,
-        field: &str,
-    ) -> Result<Vec<String>> {
-        let Some(project_field) = self.resolve_project_field_name(project, field).await? else {
-            return Ok(Vec::new());
-        };
-        let query = format!(
-            "project {} {} ",
-            quote_command_value(project),
-            quote_command_field_name(&project_field)
-        );
-        let mut payload = models::CommandList::new();
-        payload.query = Some(Some(query.clone()));
-        payload.caret = Some(query.len() as i32);
-
-        let response = default_api::commands_assist_post(
-            &self.configuration,
-            Some("suggestions(option,description)"),
-            Some(payload),
-        )
-        .await
-        .map_err(map_api_error)?;
-
-        Ok(extract_suggestion_values(response.suggestions))
+        suggestions.sort_by(|a, b| a.name.to_ascii_lowercase().cmp(&b.name.to_ascii_lowercase()));
+        suggestions.dedup_by(|a, b| a.name.eq_ignore_ascii_case(&b.name));
+        Ok(suggestions)
     }
 
     pub async fn get_issue_links(&self, id: &str) -> Result<Vec<models::IssueLink>> {
@@ -371,23 +308,66 @@ impl YouTrackClient {
         )))
     }
 
-    async fn resolve_project_field_name(
+    async fn fetch_project_custom_fields(
         &self,
-        project_key: &str,
-        logical_field: &str,
-    ) -> Result<Option<String>> {
-        let project_id = self.resolve_project_id(project_key).await?;
-        let custom_fields = default_api::admin_projects_id_custom_fields_get(
+        project_id: &str,
+    ) -> Result<Vec<models::ProjectCustomField>> {
+        default_api::admin_projects_id_custom_fields_get(
             &self.configuration,
-            &project_id,
-            Some("field(name,localizedName,aliases,fieldType(id,$type))"),
+            project_id,
+            Some("id,field(name,localizedName,aliases,fieldType(id,$type))"),
             None,
             None,
         )
         .await
-        .map_err(map_api_error)?;
+        .map_err(map_api_error)
+    }
 
-        Ok(select_project_field_name(&custom_fields, logical_field))
+    async fn fetch_project_custom_field_value_labels(
+        &self,
+        project_id: &str,
+        project_custom_field_id: &str,
+    ) -> Result<Vec<String>> {
+        let endpoint = format!(
+            "{}/admin/projects/{}/customFields/{}",
+            self.configuration.base_path, project_id, project_custom_field_id
+        );
+        let fields = "bundle(values(name,localizedName),individuals(login,fullName),aggregatedUsers(login,fullName)),defaultValues(name,localizedName,login,fullName)";
+
+        let mut request = self
+            .configuration
+            .client
+            .get(endpoint)
+            .query(&[("fields", fields)]);
+
+        if let Some(user_agent) = self.configuration.user_agent.as_ref() {
+            request = request.header("User-Agent", user_agent);
+        }
+        if let Some(token) = self.configuration.bearer_access_token.as_ref() {
+            request = request.header("Authorization", format!("Bearer {token}"));
+        }
+
+        let response = request
+            .send()
+            .await
+            .map_err(|err| TrackItError::ApiMessage(err.to_string()))?;
+
+        let status = response.status();
+        let body = response
+            .text()
+            .await
+            .map_err(|err| TrackItError::ApiMessage(err.to_string()))?;
+
+        if status.is_client_error() || status.is_server_error() {
+            return Err(TrackItError::ApiResponse {
+                status: status.as_u16(),
+                body,
+            });
+        }
+
+        let payload: serde_json::Value =
+            serde_json::from_str(&body).map_err(|err| TrackItError::ApiMessage(err.to_string()))?;
+        Ok(extract_custom_field_values_from_json(&payload))
     }
 
     async fn resolve_project_id(&self, project_key: &str) -> Result<String> {
@@ -455,78 +435,110 @@ fn map_api_error<T: std::fmt::Debug>(error: ApiError<T>) -> TrackItError {
     }
 }
 
-fn extract_suggestion_values(suggestions: Option<Vec<models::Suggestion>>) -> Vec<String> {
-    let mut values: Vec<String> = suggestions
-        .unwrap_or_default()
-        .into_iter()
-        .filter_map(|s| {
-            let option = s.option.and_then(|v| v);
-            let description = s.description.and_then(|v| v);
-            option.or(description)
-        })
-        .filter(|v| !v.trim().is_empty())
-        .collect();
+fn project_custom_field_id(field: &models::ProjectCustomField) -> Option<&str> {
+    use models::ProjectCustomField::*;
 
-    values.sort();
-    values.dedup();
+    match field {
+        BuildProjectCustomField { id, .. }
+        | BundleProjectCustomField { id, .. }
+        | EnumProjectCustomField { id, .. }
+        | GroupProjectCustomField { id, .. }
+        | OwnedProjectCustomField { id, .. }
+        | PeriodProjectCustomField { id, .. }
+        | ProjectCustomField { id, .. }
+        | SimpleProjectCustomField { id, .. }
+        | StateProjectCustomField { id, .. }
+        | TextProjectCustomField { id, .. }
+        | UserProjectCustomField { id, .. }
+        | VersionProjectCustomField { id, .. } => id.as_deref(),
+    }
+}
+
+fn project_custom_field_name(field: &models::ProjectCustomField) -> Option<String> {
+    project_custom_field_def(field)
+        .and_then(|custom| custom.name.as_ref())
+        .map(|name| name.trim().to_string())
+        .filter(|name| !name.is_empty())
+}
+
+fn extract_custom_field_values_from_json(payload: &serde_json::Value) -> Vec<String> {
+    let mut values = Vec::new();
+
+    if let Some(bundle_values) = payload
+        .get("bundle")
+        .and_then(|bundle| bundle.get("values"))
+        .and_then(serde_json::Value::as_array)
+    {
+        values.extend(bundle_values.iter().filter_map(extract_label_value));
+    }
+
+    if let Some(users) = payload
+        .get("bundle")
+        .and_then(|bundle| bundle.get("aggregatedUsers"))
+        .and_then(serde_json::Value::as_array)
+    {
+        values.extend(users.iter().filter_map(extract_user_login));
+    }
+
+    if let Some(users) = payload
+        .get("bundle")
+        .and_then(|bundle| bundle.get("individuals"))
+        .and_then(serde_json::Value::as_array)
+    {
+        values.extend(users.iter().filter_map(extract_user_login));
+    }
+
+    if let Some(defaults) = payload
+        .get("defaultValues")
+        .and_then(serde_json::Value::as_array)
+    {
+        values.extend(defaults.iter().filter_map(extract_label_or_login));
+    }
+
     values
 }
 
-fn quote_search_query_value(value: &str) -> String {
-    if value.chars().any(char::is_whitespace) {
-        format!("\"{}\"", value.replace('"', "\\\""))
-    } else {
-        value.to_string()
-    }
+fn extract_label_or_login(value: &serde_json::Value) -> Option<String> {
+    extract_label_value(value).or_else(|| extract_user_login(value))
 }
 
-fn quote_command_value(value: &str) -> String {
-    if value.chars().any(char::is_whitespace) {
-        format!("\"{}\"", value.replace('"', "\\\""))
-    } else {
-        value.to_string()
-    }
+fn extract_label_value(value: &serde_json::Value) -> Option<String> {
+    value
+        .get("localizedName")
+        .and_then(serde_json::Value::as_str)
+        .or_else(|| value.get("name").and_then(serde_json::Value::as_str))
+        .map(str::trim)
+        .filter(|v| !v.is_empty())
+        .map(str::to_string)
 }
 
-fn quote_search_field_name(value: &str) -> String {
-    if value.chars().any(char::is_whitespace) {
-        format!("\"{}\"", value.replace('"', "\\\""))
-    } else {
-        value.to_string()
-    }
+fn extract_user_login(value: &serde_json::Value) -> Option<String> {
+    value
+        .get("login")
+        .and_then(serde_json::Value::as_str)
+        .map(str::trim)
+        .filter(|v| !v.is_empty())
+        .map(str::to_string)
 }
 
-fn quote_command_field_name(value: &str) -> String {
-    if value.chars().any(char::is_whitespace) {
-        format!("\"{}\"", value.replace('"', "\\\""))
-    } else {
-        value.to_string()
-    }
+fn normalize_values(values: Vec<String>) -> Vec<String> {
+    let mut out: Vec<String> = values
+        .into_iter()
+        .map(|v| v.trim().to_string())
+        .filter(|v| !v.is_empty())
+        .collect();
+    out.sort();
+    out.dedup();
+    out
 }
 
-fn select_project_field_name(
-    fields: &[models::ProjectCustomField],
-    logical_field: &str,
-) -> Option<String> {
-    let mut best_score = 0i32;
-    let mut best_name: Option<String> = None;
-
-    for field in fields {
-        let Some(custom) = project_custom_field_def(field) else {
-            continue;
-        };
-        let Some(name) = custom.name.as_deref() else {
-            continue;
-        };
-
-        let score = score_project_field(custom, logical_field);
-        if score > best_score {
-            best_score = score;
-            best_name = Some(name.to_string());
-        }
+fn quote_command_part(value: &str) -> String {
+    let trimmed = value.trim();
+    if trimmed.chars().any(|c| c.is_whitespace() || c == '"') {
+        format!("\"{}\"", trimmed.replace('"', "\\\""))
+    } else {
+        trimmed.to_string()
     }
-
-    best_name
 }
 
 fn project_custom_field_def(field: &models::ProjectCustomField) -> Option<&models::CustomField> {
@@ -545,82 +557,5 @@ fn project_custom_field_def(field: &models::ProjectCustomField) -> Option<&model
         | TextProjectCustomField { field, .. }
         | UserProjectCustomField { field, .. }
         | VersionProjectCustomField { field, .. } => field.as_deref(),
-    }
-}
-
-fn score_project_field(field: &models::CustomField, logical_field: &str) -> i32 {
-    let name = field
-        .name
-        .as_deref()
-        .unwrap_or_default()
-        .to_ascii_lowercase();
-    let localized = field
-        .localized_name
-        .as_ref()
-        .and_then(|v| v.as_ref())
-        .map(|v| v.to_ascii_lowercase())
-        .unwrap_or_default();
-    let aliases = field
-        .aliases
-        .as_ref()
-        .and_then(|v| v.as_ref())
-        .map(|v| v.to_ascii_lowercase())
-        .unwrap_or_default();
-    let field_type = field
-        .field_type
-        .as_ref()
-        .and_then(|t| t.dollar_type.as_ref())
-        .map(|v| v.to_ascii_lowercase())
-        .unwrap_or_default();
-
-    let has = |needle: &str| {
-        name.contains(needle) || localized.contains(needle) || aliases.contains(needle)
-    };
-
-    let key = logical_field.trim().to_ascii_lowercase();
-    match key.as_str() {
-        "state" => {
-            if field_type.contains("statefieldtype") {
-                return 100;
-            }
-            if has("state") {
-                return 80;
-            }
-            0
-        }
-        "assignee" => {
-            if has("assignee") {
-                return 100;
-            }
-            if has("assign") && field_type.contains("userfieldtype") {
-                return 90;
-            }
-            if field_type.contains("userfieldtype") {
-                return 40;
-            }
-            0
-        }
-        "priority" => {
-            if has("priority") {
-                return 100;
-            }
-            if has("severity") {
-                return 80;
-            }
-            0
-        }
-        "type" => {
-            if has("issue type") {
-                return 100;
-            }
-            if has("type") {
-                return 80;
-            }
-            if field_type.contains("enumfieldtype") && !has("priority") {
-                return 30;
-            }
-            0
-        }
-        _ => 0,
     }
 }

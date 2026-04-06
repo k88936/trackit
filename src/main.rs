@@ -13,7 +13,7 @@ use tabled::Tabled;
 use crate::config::Config;
 use crate::error::{Result, TrackItError};
 use crate::output::{format_json, format_table};
-use crate::youtrack::YouTrackClient;
+use crate::youtrack::{ProjectFieldSuggestion, YouTrackClient};
 
 #[derive(Parser)]
 #[command(name = "trackit")]
@@ -91,14 +91,8 @@ enum IssueCommands {
     List {
         #[arg(long)]
         project: String,
-        #[arg(long)]
-        state: Option<String>,
-        #[arg(long)]
-        assignee: Option<String>,
-        #[arg(long)]
-        priority: Option<String>,
-        #[arg(long = "type")]
-        issue_type: Option<String>,
+        #[arg(long = "filter", value_name = "KEY=VALUE")]
+        filters: Vec<String>,
         #[arg(long)]
         skip: Option<i32>,
         #[arg(long)]
@@ -133,6 +127,8 @@ struct IssueCreateArgs {
     summary: String,
     #[arg(long)]
     description: Option<String>,
+    #[arg(long = "field", value_name = "KEY=VALUE")]
+    fields: Vec<String>,
     #[arg(long = "link", value_name = "RELATION:ISSUE")]
     links: Vec<String>,
 }
@@ -142,18 +138,8 @@ struct IssueUpdateArgs {
     id: String,
     #[arg(long)]
     project: String,
-    #[arg(long)]
-    state: Option<String>,
-    #[arg(long)]
-    assignee: Option<String>,
-    #[arg(long)]
-    priority: Option<String>,
-    #[arg(long = "type")]
-    issue_type: Option<String>,
-    #[arg(long)]
-    summary: Option<String>,
-    #[arg(long)]
-    description: Option<String>,
+    #[arg(long = "field", value_name = "KEY=VALUE")]
+    field: Vec<String>,
     #[arg(long = "link", value_name = "RELATION:ISSUE")]
     link: Vec<String>,
     #[arg(long = "unlink", value_name = "RELATION:ISSUE")]
@@ -194,20 +180,12 @@ async fn main() -> Result<()> {
             match command {
                 IssueCommands::List {
                     project,
-                    state,
-                    assignee,
-                    priority,
-                    issue_type,
+                    filters,
                     skip,
                     top,
                 } => {
-                    let query = build_issue_query(
-                        &project,
-                        state.as_deref(),
-                        assignee.as_deref(),
-                        priority.as_deref(),
-                        issue_type.as_deref(),
-                    );
+                    let parsed_filters = parse_key_value_specs(&filters, "--filter")?;
+                    let query = build_issue_query(&project, &parsed_filters);
                     let issues = client.list_issues(Some(&query), skip, top).await?;
                     render_issues(&issues, global.json)?;
                 }
@@ -250,43 +228,9 @@ async fn main() -> Result<()> {
                     render_comment(&comment, global.json)?;
                 }
                 IssueCommands::Update(args) => {
-                    if args.state.is_none()
-                        && args.assignee.is_none()
-                        && args.priority.is_none()
-                        && args.issue_type.is_none()
-                        && args.summary.is_none()
-                        && args.description.is_none()
-                        && args.link.is_empty()
-                        && args.unlink.is_empty()
-                    {
-                        return Err(TrackItError::Config(
-                            "issues update needs at least one of: --state, --assignee, --priority, --type, --summary, --description, --link, --unlink"
-                                .to_string(),
-                        ));
-                    }
-
-                    client.update_issue_project(&args.id, &args.project).await?;
-                    if let Some(state) = args.state.as_deref() {
-                        client.update_issue_state(&args.id, state).await?;
-                    }
-                    if let Some(assignee) = args.assignee.as_deref() {
-                        client.assign_issue(&args.id, assignee).await?;
-                    }
-                    if let Some(priority) = args.priority.as_deref() {
-                        client.update_issue_priority(&args.id, priority).await?;
-                    }
-                    if let Some(issue_type) = args.issue_type.as_deref() {
-                        client.update_issue_type(&args.id, issue_type).await?;
-                    }
-
-                    if args.summary.is_some() || args.description.is_some() {
-                        client
-                            .update_issue_text(
-                                &args.id,
-                                args.summary.as_deref(),
-                                args.description.as_deref(),
-                            )
-                            .await?;
+                    let assignments = parse_key_value_specs(&args.field, "--set")?;
+                    for (key, value) in assignments {
+                        client.update_issue_field(&args.id, &key, &value).await?;
                     }
 
                     for link in &args.link {
@@ -321,6 +265,8 @@ async fn try_print_dynamic_help() -> Result<bool> {
         Some(("issues", "list"))
     } else if args.iter().any(|arg| arg == "issues") && args.iter().any(|arg| arg == "update") {
         Some(("issues", "update"))
+    } else if args.iter().any(|arg| arg == "issues") && args.iter().any(|arg| arg == "create") {
+        Some(("issues", "create"))
     } else {
         None
     };
@@ -414,82 +360,44 @@ async fn build_dynamic_after_help(
     if subcommand == "update" {
         return build_update_after_help(client, project).await;
     }
+    if subcommand == "create" {
+        return build_create_after_help(client, project).await;
+    }
     String::new()
 }
 
 async fn build_list_after_help(client: &YouTrackClient, project: Option<&str>) -> String {
-    let projects = client.list_project_values().await;
-    let (notice, state, assignee, priority, issue_type) = if let Some(project_key) = project {
-        (
-            String::new(),
-            client
-                .suggest_list_values_for_project(project_key, "State")
-                .await,
-            client
-                .suggest_list_values_for_project(project_key, "Assignee")
-                .await,
-            client
-                .suggest_list_values_for_project(project_key, "Priority")
-                .await,
-            client
-                .suggest_list_values_for_project(project_key, "Type")
-                .await,
-        )
-    } else {
-        (
-            "Project-scoped values require --project <PROJECT>.\n".to_string(),
-            Ok(Vec::new()),
-            Ok(Vec::new()),
-            Ok(Vec::new()),
-            Ok(Vec::new()),
-        )
-    };
-
-    format!(
-        "{notice}Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
-        summarize_values(projects),
-        summarize_values(state),
-        summarize_values(assignee),
-        summarize_values(priority),
-        summarize_values(issue_type),
-    )
+    build_field_help(client, project, "--filter").await
 }
 
 async fn build_update_after_help(client: &YouTrackClient, project: Option<&str>) -> String {
+    build_field_help(client, project, "--set").await
+}
+
+async fn build_create_after_help(client: &YouTrackClient, project: Option<&str>) -> String {
+    build_field_help(client, project, "--field").await
+}
+
+async fn build_field_help(client: &YouTrackClient, project: Option<&str>, flag: &str) -> String {
     let projects = client.list_project_values().await;
-    let (notice, state, assignee, priority, issue_type) = if let Some(project_key) = project {
+    let (notice, fields) = if let Some(project_key) = project {
         (
             String::new(),
             client
-                .suggest_update_values_for_project(project_key, "State")
-                .await,
-            client
-                .suggest_update_values_for_project(project_key, "Assignee")
-                .await,
-            client
-                .suggest_update_values_for_project(project_key, "Priority")
-                .await,
-            client
-                .suggest_update_values_for_project(project_key, "Type")
+                .list_project_custom_field_suggestions(project_key)
                 .await,
         )
     } else {
         (
             "Project-scoped values require --project <PROJECT>.\n".to_string(),
             Ok(Vec::new()),
-            Ok(Vec::new()),
-            Ok(Vec::new()),
-            Ok(Vec::new()),
         )
     };
 
     format!(
-        "{notice}Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
+        "{notice} Field values project specifical {}:\n {field_help}",
         summarize_values(projects),
-        summarize_values(state),
-        summarize_values(assignee),
-        summarize_values(priority),
-        summarize_values(issue_type),
+        field_help = summarize_field_suggestions(fields),
     )
 }
 
@@ -509,6 +417,41 @@ fn summarize_values(result: Result<Vec<String>>) -> String {
             }
         }
         Err(err) => format!("error: {err}"),
+    }
+}
+
+fn summarize_field_suggestions(result: Result<Vec<ProjectFieldSuggestion>>) -> String {
+    match result {
+        Ok(fields) if fields.is_empty() => "  custom fields: (none)".to_string(),
+        Ok(fields) => {
+            let mut lines = Vec::with_capacity(fields.len() + 1);
+            lines.push("  custom fields:".to_string());
+            for field in fields {
+                lines.push(format!(
+                    "    {} => {}",
+                    field.name,
+                    summarize_plain_values(&field.values)
+                ));
+            }
+            lines.join("\n")
+        }
+        Err(err) => format!("  custom fields: error: {err}"),
+    }
+}
+
+fn summarize_plain_values(values: &[String]) -> String {
+    if values.is_empty() {
+        return "(none)".to_string();
+    }
+    let limit = 12usize;
+    if values.len() > limit {
+        format!(
+            "{} ... (+{} more)",
+            values[..limit].join(", "),
+            values.len() - limit
+        )
+    } else {
+        values.join(", ")
     }
 }
 
@@ -723,29 +666,26 @@ fn opt_nested_str(value: &Option<Option<String>>) -> String {
     value.clone().flatten().unwrap_or_default()
 }
 
-fn build_issue_query(
-    project: &str,
-    state: Option<&str>,
-    assignee: Option<&str>,
-    priority: Option<&str>,
-    issue_type: Option<&str>,
-) -> String {
+fn build_issue_query(project: &str, filters: &[(String, String)]) -> String {
     let mut parts = vec![format!("project:{}", quote_query_value(project))];
 
-    if let Some(state) = state {
-        parts.push(format!("State:{}", quote_query_value(state)));
-    }
-    if let Some(assignee) = assignee {
-        parts.push(format!("Assignee:{}", quote_query_value(assignee)));
-    }
-    if let Some(priority) = priority {
-        parts.push(format!("Priority:{}", quote_query_value(priority)));
-    }
-    if let Some(issue_type) = issue_type {
-        parts.push(format!("Type:{}", quote_query_value(issue_type)));
+    for (key, value) in filters {
+        parts.push(format!(
+            "{}:{}",
+            quote_query_field_name(key),
+            quote_query_value(value)
+        ));
     }
 
     parts.join(" ")
+}
+
+fn quote_query_field_name(value: &str) -> String {
+    if value.chars().any(|c| c.is_whitespace() || c == '"') {
+        format!("\"{}\"", value.replace('"', "\\\""))
+    } else {
+        value.to_string()
+    }
 }
 
 fn quote_query_value(value: &str) -> String {
@@ -754,6 +694,56 @@ fn quote_query_value(value: &str) -> String {
     } else {
         value.to_string()
     }
+}
+
+fn parse_key_value_specs(values: &[String], flag_name: &str) -> Result<Vec<(String, String)>> {
+    values
+        .iter()
+        .map(|value| parse_key_value_spec(value, flag_name))
+        .collect()
+}
+
+fn parse_key_value_spec(value: &str, flag_name: &str) -> Result<(String, String)> {
+    let Some((key, raw_value)) = value.split_once('=') else {
+        return Err(TrackItError::Config(format!(
+            "Invalid {flag_name} format '{value}'. Expected KEY=VALUE"
+        )));
+    };
+
+    let key = key.trim();
+    let parsed_value = raw_value.trim();
+    if key.is_empty() || parsed_value.is_empty() {
+        return Err(TrackItError::Config(format!(
+            "Invalid {flag_name} format '{value}'. Both KEY and VALUE must be non-empty"
+        )));
+    }
+
+    Ok((key.to_string(), parsed_value.to_string()))
+}
+
+fn validate_field_keys(
+    assignments: &[(String, String)],
+    fields: &[ProjectFieldSuggestion],
+    flag_name: &str,
+) -> Result<()> {
+    let mut known_fields: Vec<String> = fields.iter().map(|f| f.name.clone()).collect();
+    known_fields.sort_by_key(|v| v.to_ascii_lowercase());
+
+    for (key, _) in assignments {
+        if fields.iter().any(|f| f.name.eq_ignore_ascii_case(key)) {
+            continue;
+        }
+        let available = if known_fields.is_empty() {
+            "(none)".to_string()
+        } else {
+            known_fields.join(", ")
+        };
+        return Err(TrackItError::Config(format!(
+            "Unknown field '{key}' for {flag_name}. Available fields in this project: {available}"
+        )));
+    }
+
+    Ok(())
 }
 
 fn parse_link_spec(value: &str) -> Result<(String, String)> {
