@@ -7,9 +7,8 @@ use crate::error::{Result, TrackItError};
 
 const ME_FIELDS: &str = "id,login,fullName,email";
 const PROJECT_FIELDS: &str = "id,name,shortName,archived";
-const ISSUE_LIST_FIELDS: &str = "id,idReadable,summary,updated";
-const ISSUE_DETAIL_FIELDS: &str =
-    "id,idReadable,summary,description,created,updated,project(id,name,shortName)";
+const ISSUE_LIST_FIELDS: &str = "id,idReadable,summary,updated,project(id,name,shortName),customFields(name,value(name,fullName,login,idReadable))";
+const ISSUE_DETAIL_FIELDS: &str = "id,idReadable,summary,description,created,updated,project(id,name,shortName),customFields(name,value(name,fullName,login,idReadable)),tags(name)";
 const ISSUE_CREATE_FIELDS: &str = "id,idReadable,summary,description";
 const ISSUE_COMMENT_FIELDS: &str = "id,text,author(id,login,fullName),created";
 

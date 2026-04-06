@@ -22,9 +22,6 @@ struct Cli {
     #[arg(long, global = true, help = "Output in JSON format")]
     json: bool,
 
-    #[arg(long, global = true, help = "Use specific config file")]
-    config: Option<String>,
-
     #[arg(
         long,
         global = true,
@@ -48,7 +45,6 @@ struct Cli {
 #[derive(Clone)]
 struct GlobalOpts {
     json: bool,
-    config: Option<String>,
     url: Option<String>,
     token: Option<String>,
 }
@@ -90,7 +86,15 @@ enum IssueCommands {
     #[command(about = "List issues")]
     List {
         #[arg(long)]
-        query: Option<String>,
+        project: Option<String>,
+        #[arg(long)]
+        state: Option<String>,
+        #[arg(long)]
+        assignee: Option<String>,
+        #[arg(long)]
+        priority: Option<String>,
+        #[arg(long = "type")]
+        issue_type: Option<String>,
         #[arg(long)]
         skip: Option<i32>,
         #[arg(long)]
@@ -152,7 +156,6 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
     let global = GlobalOpts {
         json: cli.json,
-        config: cli.config.clone(),
         url: cli.url.clone(),
         token: cli.token.clone(),
     };
@@ -176,7 +179,22 @@ async fn main() -> Result<()> {
         Commands::Issues { command } => {
             let client = build_client(&global)?;
             match command {
-                IssueCommands::List { query, skip, top } => {
+                IssueCommands::List {
+                    project,
+                    state,
+                    assignee,
+                    priority,
+                    issue_type,
+                    skip,
+                    top,
+                } => {
+                    let query = build_issue_query(
+                        project.as_deref(),
+                        state.as_deref(),
+                        assignee.as_deref(),
+                        priority.as_deref(),
+                        issue_type.as_deref(),
+                    );
                     let issues = client.list_issues(query.as_deref(), skip, top).await?;
                     render_issues(&issues, global.json)?;
                 }
@@ -244,20 +262,10 @@ async fn main() -> Result<()> {
 }
 
 fn build_client(global: &GlobalOpts) -> Result<YouTrackClient> {
-    let config = load_config(global)?;
+    let config = Config::load()?;
     let url = config.resolve_url(global.url.as_deref())?;
     let token = config.resolve_token(global.token.as_deref())?;
     YouTrackClient::new(&url, &token)
-}
-
-fn load_config(global: &GlobalOpts) -> Result<Config> {
-    if let Some(path) = &global.config {
-        let content = std::fs::read_to_string(path)?;
-        let config: Config = toml::from_str(&content)?;
-        return Ok(config);
-    }
-
-    Config::load()
 }
 
 #[derive(Serialize, Tabled)]
@@ -315,9 +323,13 @@ fn render_projects(projects: &[api::models::Project], as_json: bool) -> Result<(
 
 #[derive(Serialize, Tabled)]
 struct IssueRow {
-    id: String,
     id_readable: String,
     summary: String,
+    project: String,
+    assignee: String,
+    state: String,
+    priority: String,
+    issue_type: String,
     updated: String,
 }
 
@@ -330,9 +342,24 @@ fn render_issues(issues: &[api::models::Issue], as_json: bool) -> Result<()> {
     let rows: Vec<IssueRow> = issues
         .iter()
         .map(|issue| IssueRow {
-            id: opt_str(&issue.id),
             id_readable: opt_str(&issue.id_readable),
             summary: opt_nested_str(&issue.summary),
+            project: issue
+                .project
+                .as_ref()
+                .map(|p| {
+                    let short = opt_str(&p.short_name);
+                    if short.is_empty() {
+                        opt_str(&p.name)
+                    } else {
+                        short
+                    }
+                })
+                .unwrap_or_default(),
+            assignee: issue_custom_field(issue, "Assignee"),
+            state: issue_custom_field(issue, "State"),
+            priority: issue_custom_field(issue, "Priority"),
+            issue_type: issue_custom_field(issue, "Type"),
             updated: issue.updated.map(|t| t.to_string()).unwrap_or_default(),
         })
         .collect();
@@ -367,6 +394,14 @@ fn render_issue_detail(issue: &api::models::Issue, as_json: bool) -> Result<()> 
             opt_str(&project.short_name)
         );
     }
+    println!("assignee: {}", issue_custom_field(issue, "Assignee"));
+    println!("state: {}", issue_custom_field(issue, "State"));
+    println!("priority: {}", issue_custom_field(issue, "Priority"));
+    println!("type: {}", issue_custom_field(issue, "Type"));
+    if let Some(tags) = &issue.tags {
+        let names: Vec<String> = tags.iter().map(|tag| opt_str(&tag.name)).collect();
+        println!("tags: {}", names.join(", "));
+    }
 
     Ok(())
 }
@@ -400,4 +435,122 @@ fn opt_str(value: &Option<String>) -> String {
 
 fn opt_nested_str(value: &Option<Option<String>>) -> String {
     value.clone().flatten().unwrap_or_default()
+}
+
+fn build_issue_query(
+    project: Option<&str>,
+    state: Option<&str>,
+    assignee: Option<&str>,
+    priority: Option<&str>,
+    issue_type: Option<&str>,
+) -> Option<String> {
+    let mut parts = Vec::new();
+
+    if let Some(project) = project {
+        parts.push(format!("project:{}", quote_query_value(project)));
+    }
+
+    if let Some(state) = state {
+        parts.push(format!("State:{}", quote_query_value(state)));
+    }
+    if let Some(assignee) = assignee {
+        parts.push(format!("Assignee:{}", quote_query_value(assignee)));
+    }
+    if let Some(priority) = priority {
+        parts.push(format!("Priority:{}", quote_query_value(priority)));
+    }
+    if let Some(issue_type) = issue_type {
+        parts.push(format!("Type:{}", quote_query_value(issue_type)));
+    }
+
+    if parts.is_empty() {
+        None
+    } else {
+        Some(parts.join(" "))
+    }
+}
+
+fn quote_query_value(value: &str) -> String {
+    if value.chars().any(char::is_whitespace) {
+        format!("\"{}\"", value.replace('"', "\\\""))
+    } else {
+        value.to_string()
+    }
+}
+
+fn issue_custom_field(issue: &api::models::Issue, field_name: &str) -> String {
+    let Some(custom_fields) = &issue.custom_fields else {
+        return String::new();
+    };
+
+    for field in custom_fields {
+        let (name, value) = issue_custom_field_parts(field);
+        if name
+            .map(|n| n.eq_ignore_ascii_case(field_name))
+            .unwrap_or(false)
+        {
+            if let Some(value) = value {
+                return custom_field_value_to_string(value);
+            }
+            return String::new();
+        }
+    }
+
+    String::new()
+}
+
+fn issue_custom_field_parts(
+    field: &api::models::IssueCustomField,
+) -> (Option<&String>, Option<&serde_json::Value>) {
+    use api::models::IssueCustomField::*;
+
+    match field {
+        DateIssueCustomField { name, value, .. }
+        | IssueCustomField { name, value, .. }
+        | MultiBuildIssueCustomField { name, value, .. }
+        | MultiEnumIssueCustomField { name, value, .. }
+        | MultiGroupIssueCustomField { name, value, .. }
+        | MultiOwnedIssueCustomField { name, value, .. }
+        | MultiUserIssueCustomField { name, value, .. }
+        | DatabaseMultiValueIssueCustomField { name, value, .. }
+        | MultiVersionIssueCustomField { name, value, .. }
+        | PeriodIssueCustomField { name, value, .. }
+        | SimpleIssueCustomField { name, value, .. }
+        | SingleBuildIssueCustomField { name, value, .. }
+        | SingleEnumIssueCustomField { name, value, .. }
+        | SingleGroupIssueCustomField { name, value, .. }
+        | SingleOwnedIssueCustomField { name, value, .. }
+        | SingleUserIssueCustomField { name, value, .. }
+        | DatabaseSingleValueIssueCustomField { name, value, .. }
+        | SingleVersionIssueCustomField { name, value, .. }
+        | StateIssueCustomField { name, value, .. }
+        | StateMachineIssueCustomField { name, value, .. }
+        | TextIssueCustomField { name, value, .. } => (name.as_ref(), value.as_ref()),
+    }
+}
+
+fn custom_field_value_to_string(value: &serde_json::Value) -> String {
+    match value {
+        serde_json::Value::Null => String::new(),
+        serde_json::Value::Bool(v) => v.to_string(),
+        serde_json::Value::Number(v) => v.to_string(),
+        serde_json::Value::String(v) => v.clone(),
+        serde_json::Value::Array(values) => values
+            .iter()
+            .map(custom_field_value_to_string)
+            .filter(|v| !v.is_empty())
+            .collect::<Vec<_>>()
+            .join(", "),
+        serde_json::Value::Object(map) => {
+            for key in ["name", "fullName", "login", "idReadable", "id"] {
+                if let Some(v) = map.get(key) {
+                    let text = custom_field_value_to_string(v);
+                    if !text.is_empty() {
+                        return text;
+                    }
+                }
+            }
+            serde_json::to_string(value).unwrap_or_default()
+        }
+    }
 }
