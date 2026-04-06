@@ -1,4 +1,5 @@
 use clap::{Args, Parser, Subcommand};
+use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(name = "trackit")]
@@ -118,8 +119,19 @@ pub struct IssueCreateArgs {
     pub project: String,
     #[arg(long, help = "Issue summary/title")]
     pub summary: String,
-    #[arg(long, help = "Issue description")]
+    #[arg(
+        long,
+        help = "Issue description. Supports escaped sequences like \\n and \\t",
+        conflicts_with = "description_file"
+    )]
     pub description: Option<String>,
+    #[arg(
+        long,
+        value_name = "PATH",
+        help = "Read issue description from file",
+        conflicts_with = "description"
+    )]
+    pub description_file: Option<PathBuf>,
     #[arg(
         long = "field",
         value_name = "KEY=VALUE",
@@ -138,6 +150,21 @@ pub struct IssueCreateArgs {
 pub struct IssueUpdateArgs {
     #[arg(help = "Issue id, for example PRJ-123")]
     pub id: String,
+    #[arg(long, help = "Update issue summary/title")]
+    pub summary: Option<String>,
+    #[arg(
+        long,
+        help = "Update issue description. Supports escaped sequences like \\n and \\t",
+        conflicts_with = "description_file"
+    )]
+    pub description: Option<String>,
+    #[arg(
+        long,
+        value_name = "PATH",
+        help = "Read updated issue description from file",
+        conflicts_with = "description"
+    )]
+    pub description_file: Option<PathBuf>,
     #[arg(
         long = "field",
         value_name = "KEY=VALUE",

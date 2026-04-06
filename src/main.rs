@@ -9,13 +9,12 @@ use clap::Parser;
 
 use crate::app::args::{Commands, IssueCommands, ProjectCommands};
 use crate::app::context::build_client;
-use crate::app::parsing::{
-    build_issue_query, parse_key_value_specs, parse_link_spec, summarize_plain_values,
-};
+use crate::app::parsing::{build_issue_query, parse_key_value_specs, parse_link_spec, summarize_plain_values};
 use crate::app::render_basic::{
     render_comment, render_me, render_project_custom_fields, render_projects,
 };
 use crate::app::render_issue::{render_issue_detail, render_issues};
+use crate::app::utils::text::{decode_cli_escapes, read_text_file};
 use crate::cli::run_setup_wizard;
 use crate::error::TrackItError;
 use app::args::Cli;
@@ -76,8 +75,17 @@ async fn main() -> Result<()> {
                 }
                 IssueCommands::Create(args) => {
                     let assignments = parse_key_value_specs(&args.fields, "--field")?;
+                    let description = if let Some(path) = args.description_file.as_deref() {
+                        Some(read_text_file(path)?)
+                    } else {
+                        args.description.as_deref().map(decode_cli_escapes)
+                    };
                     let issue = client
-                        .create_issue(&args.project, &args.summary, args.description.as_deref())
+                        .create_issue(
+                            &args.project,
+                            &args.summary,
+                            description.as_deref(),
+                        )
                         .await?;
                     let issue_ref =
                         issue
@@ -110,10 +118,24 @@ async fn main() -> Result<()> {
                     println!("Deleted issue {id}");
                 }
                 IssueCommands::Comment { id, text } => {
+                    let text = decode_cli_escapes(&text);
                     let comment = client.comment_issue(&id, &text).await?;
                     render_comment(&comment, global.json)?;
                 }
                 IssueCommands::Update(args) => {
+                    let description = if let Some(path) = args.description_file.as_deref() {
+                        Some(read_text_file(path)?)
+                    } else {
+                        args.description.as_deref().map(decode_cli_escapes)
+                    };
+                    client
+                        .update_issue(
+                            &args.id,
+                            args.summary.as_deref(),
+                            description.as_deref(),
+                        )
+                        .await?;
+
                     let assignments = parse_key_value_specs(&args.field, "--field")?;
                     for (key, value) in assignments {
                         client.update_issue_field(&args.id, &key, &value).await?;
