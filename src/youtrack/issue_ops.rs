@@ -108,6 +108,33 @@ impl YouTrackClient {
         self.run_issue_command(id, &command).await
     }
 
+    pub async fn update_issue(
+        &self,
+        id: &str,
+        summary: Option<&str>,
+        description: Option<&str>,
+    ) -> Result<()> {
+        let mut issue = models::Issue::new();
+
+        if let Some(summary) = summary {
+            issue.summary = Some(Some(summary.to_string()));
+        }
+
+        if let Some(description) = description {
+            issue.description = Some(Some(description.to_string()));
+        }
+
+        if issue.summary.is_none() && issue.description.is_none() {
+            return Ok(());
+        }
+
+        default_api::issues_id_post(&self.configuration, id, None, Some("id"), Some(issue))
+            .await
+            .map_err(map_api_error)?;
+
+        Ok(())
+    }
+
     async fn run_issue_command(&self, issue_id: &str, command: &str) -> Result<()> {
         let mut issue = models::Issue::new();
         issue.id = Some(issue_id.to_string());
