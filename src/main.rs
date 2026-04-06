@@ -7,7 +7,7 @@ mod youtrack;
 
 use clap::Parser;
 
-use crate::app::args::{Commands, IssueCommands, ProjectCommands, ProjectGetCommands};
+use crate::app::args::{Commands, IssueCommands, ProjectCommands};
 use crate::app::context::build_client;
 use crate::app::parsing::{
     build_issue_query, parse_key_value_specs, parse_link_spec, summarize_plain_values,
@@ -46,14 +46,12 @@ async fn main() -> Result<()> {
                     let projects = client.list_projects(skip, top).await?;
                     render_projects(&projects, global.json)?;
                 }
-                ProjectCommands::Get { command } => match command {
-                    ProjectGetCommands::CustomField { project } => {
-                        let fields = client
-                            .list_project_custom_field_suggestions(&project)
-                            .await?;
-                        render_project_custom_fields(&fields, global.json, summarize_plain_values)?;
-                    }
-                },
+                ProjectCommands::GetCustomField { project } => {
+                    let fields = client
+                        .list_project_custom_field_suggestions(&project)
+                        .await?;
+                    render_project_custom_fields(&fields, global.json, summarize_plain_values)?;
+                }
             }
         }
         Commands::Issues { command } => {

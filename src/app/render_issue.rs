@@ -138,13 +138,7 @@ fn summarize_link_relations(issue: &api::models::Issue) -> String {
     let mut relations: std::collections::BTreeMap<String, BTreeSet<String>> =
         std::collections::BTreeMap::new();
     for link in links {
-        let relation = link
-            .link_type
-            .as_ref()
-            .and_then(|lt| lt.name.as_deref())
-            .map(str::trim)
-            .filter(|v| !v.is_empty())
-            .map(str::to_string);
+        let relation = link_relation_label(link);
         let Some(relation) = relation else {
             continue;
         };
@@ -192,11 +186,7 @@ fn render_issue_links(issue: &api::models::Issue) {
     };
 
     for link in links {
-        let relation = link
-            .link_type
-            .as_ref()
-            .and_then(|lt| lt.name.clone())
-            .unwrap_or_default();
+        let relation = link_relation_label(link).unwrap_or_default();
         let related = link
             .issues
             .as_ref()
@@ -216,5 +206,45 @@ fn render_issue_links(issue: &api::models::Issue) {
         for row in rows {
             println!("  - {row}");
         }
+    }
+}
+
+fn link_relation_label(link: &api::models::IssueLink) -> Option<String> {
+    let link_type = link.link_type.as_ref()?;
+    let source_to_target = link_type
+        .source_to_target
+        .as_deref()
+        .map(str::trim)
+        .filter(|v| !v.is_empty());
+    let target_to_source = link_type
+        .target_to_source
+        .as_ref()
+        .and_then(|v| v.as_deref())
+        .map(str::trim)
+        .filter(|v| !v.is_empty());
+    let name = link_type
+        .name
+        .as_deref()
+        .map(str::trim)
+        .filter(|v| !v.is_empty());
+
+    use api::models::issue_link::Direction;
+    match link.direction {
+        Some(Direction::Outward) => source_to_target
+            .or(name)
+            .map(str::to_string),
+        Some(Direction::Inward) => target_to_source
+            .or(name)
+            .map(str::to_string),
+        Some(Direction::Both) => match (source_to_target, target_to_source) {
+            (Some(src), Some(tgt)) if src != tgt => Some(format!("{src} / {tgt}")),
+            (Some(src), _) => Some(src.to_string()),
+            (_, Some(tgt)) => Some(tgt.to_string()),
+            _ => name.map(str::to_string),
+        },
+        None => source_to_target
+            .or(target_to_source)
+            .or(name)
+            .map(str::to_string),
     }
 }

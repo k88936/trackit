@@ -62,18 +62,12 @@ pub enum ProjectCommands {
         #[arg(long, help = "Maximum number of projects to return")]
         top: Option<i32>,
     },
-    #[command(about = "Get project metadata")]
-    Get {
-        #[command(subcommand)]
-        command: ProjectGetCommands,
-    },
-}
-
-#[derive(Subcommand)]
-pub enum ProjectGetCommands {
-    #[command(name = "custom-field", about = "Show custom fields for one project")]
-    CustomField {
-        #[arg(long, help = "Project id or short name")]
+    #[command(
+        name = "get-custom-field",
+        about = "Show custom fields for one project"
+    )]
+    GetCustomField {
+        #[arg(help = "Project id or short name")]
         project: String,
     },
 }
@@ -87,7 +81,7 @@ pub enum IssueCommands {
         #[arg(
             long = "filter",
             value_name = "KEY=VALUE",
-            help = "Filter by field value, can be provided multiple times. possible KEY and VALUE see `trackit project get custom-field --project PROJECT_NAME`"
+            help = "Filter by field value, can be provided multiple times. possible KEY and VALUE see `trackit project get-custom-field PROJECT_NAME`"
         )]
         filters: Vec<String>,
         #[arg(long, help = "Number of issues to skip before listing")]
@@ -129,7 +123,7 @@ pub struct IssueCreateArgs {
     #[arg(
         long = "field",
         value_name = "KEY=VALUE",
-        help = "Set project custom field value, can be provided multiple times. possible KEY and VALUE see `trackit project get custom-field --project PROJECT_NAME`"
+        help = "Set project custom field value, can be provided multiple times. possible KEY and VALUE see `trackit project get-custom-field PROJECT_NAME`"
     )]
     pub fields: Vec<String>,
     #[arg(
@@ -147,7 +141,7 @@ pub struct IssueUpdateArgs {
     #[arg(
         long = "field",
         value_name = "KEY=VALUE",
-        help = "Set a custom field value, can be provided multiple times. possible KEY and VALUE see `trackit project get custom-field --project PROJECT_NAME`"
+        help = "Set a custom field value, can be provided multiple times. possible KEY and VALUE see `trackit project get-custom-field PROJECT_NAME`"
     )]
     pub field: Vec<String>,
     #[arg(

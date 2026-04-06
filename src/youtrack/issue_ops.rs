@@ -161,7 +161,7 @@ impl YouTrackClient {
             IssueFieldMaskKind::List => {
                 parts.push("updated".to_string());
                 parts.push(
-                    "links(linkType(name),issues(id,idReadable),trimmedIssues(id,idReadable))"
+                    "links(id,direction,linkType(name,sourceToTarget,targetToSource),issues(id,idReadable),trimmedIssues(id,idReadable))"
                         .to_string(),
                 );
             }
