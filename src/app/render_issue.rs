@@ -1,4 +1,5 @@
 use serde::Serialize;
+use std::collections::BTreeSet;
 use tabled::Tabled;
 
 use crate::error::Result;
@@ -13,6 +14,7 @@ struct IssueRow {
     summary: String,
     project: String,
     fields: String,
+    links: String,
     updated: String,
 }
 
@@ -40,6 +42,7 @@ pub fn render_issues(issues: &[api::models::Issue], as_json: bool) -> Result<()>
                 })
                 .unwrap_or_default(),
             fields: summarize_issue_fields(issue),
+            links: summarize_link_relations(issue),
             updated: issue.updated.map(|t| t.to_string()).unwrap_or_default(),
         })
         .collect();
@@ -125,6 +128,61 @@ fn summarize_issue_fields(issue: &api::models::Issue) -> String {
     } else {
         summary
     }
+}
+
+fn summarize_link_relations(issue: &api::models::Issue) -> String {
+    let Some(links) = &issue.links else {
+        return String::new();
+    };
+
+    let mut relations: std::collections::BTreeMap<String, BTreeSet<String>> =
+        std::collections::BTreeMap::new();
+    for link in links {
+        let relation = link
+            .link_type
+            .as_ref()
+            .and_then(|lt| lt.name.as_deref())
+            .map(str::trim)
+            .filter(|v| !v.is_empty())
+            .map(str::to_string);
+        let Some(relation) = relation else {
+            continue;
+        };
+
+        let targets = relations.entry(relation).or_default();
+        let related = link
+            .issues
+            .as_ref()
+            .or(link.trimmed_issues.as_ref())
+            .cloned()
+            .unwrap_or_default();
+        for linked in related {
+            let ref_id = linked
+                .id_readable
+                .or(linked.id)
+                .unwrap_or_else(String::new)
+                .trim()
+                .to_string();
+            if !ref_id.is_empty() {
+                targets.insert(ref_id);
+            }
+        }
+    }
+
+    relations
+        .into_iter()
+        .filter_map(|(relation, targets)| {
+            if targets.is_empty() {
+                None
+            } else {
+                Some(format!(
+                    "{relation}:{}",
+                    targets.into_iter().collect::<Vec<_>>().join(",")
+                ))
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("; ")
 }
 
 fn render_issue_links(issue: &api::models::Issue) {
