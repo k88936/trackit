@@ -17,7 +17,10 @@ use crate::youtrack::YouTrackClient;
 
 #[derive(Parser)]
 #[command(name = "trackit")]
-#[command(about = "YouTrack CLI tool", long_about = None)]
+#[command(
+    about = "YouTrack CLI tool",
+    long_about = "Youtrack CLI Tool , especially for code agent to do issue management"
+)]
 #[command(version)]
 struct Cli {
     #[arg(long, global = true, help = "Output in JSON format")]
@@ -87,7 +90,7 @@ enum IssueCommands {
     #[command(about = "List issues")]
     List {
         #[arg(long)]
-        project: Option<String>,
+        project: String,
         #[arg(long)]
         state: Option<String>,
         #[arg(long)]
@@ -130,13 +133,15 @@ struct IssueCreateArgs {
     summary: String,
     #[arg(long)]
     description: Option<String>,
+    #[arg(long = "link", value_name = "RELATION:ISSUE")]
+    links: Vec<String>,
 }
 
 #[derive(Args)]
 struct IssueUpdateArgs {
     id: String,
     #[arg(long)]
-    project: Option<String>,
+    project: String,
     #[arg(long)]
     state: Option<String>,
     #[arg(long)]
@@ -149,6 +154,10 @@ struct IssueUpdateArgs {
     summary: Option<String>,
     #[arg(long)]
     description: Option<String>,
+    #[arg(long = "link", value_name = "RELATION:ISSUE")]
+    link: Vec<String>,
+    #[arg(long = "unlink", value_name = "RELATION:ISSUE")]
+    unlink: Vec<String>,
 }
 
 #[tokio::main]
@@ -193,13 +202,13 @@ async fn main() -> Result<()> {
                     top,
                 } => {
                     let query = build_issue_query(
-                        project.as_deref(),
+                        &project,
                         state.as_deref(),
                         assignee.as_deref(),
                         priority.as_deref(),
                         issue_type.as_deref(),
                     );
-                    let issues = client.list_issues(query.as_deref(), skip, top).await?;
+                    let issues = client.list_issues(Some(&query), skip, top).await?;
                     render_issues(&issues, global.json)?;
                 }
                 IssueCommands::Read { id } => {
@@ -210,6 +219,26 @@ async fn main() -> Result<()> {
                     let issue = client
                         .create_issue(&args.project, &args.summary, args.description.as_deref())
                         .await?;
+                    let issue_ref =
+                        issue
+                            .id_readable
+                            .clone()
+                            .or(issue.id.clone())
+                            .ok_or_else(|| {
+                                TrackItError::ApiMessage(
+                                    "Created issue response is missing id and idReadable"
+                                        .to_string(),
+                                )
+                            })?;
+
+                    for link in &args.links {
+                        let (relation, target) = parse_link_spec(link)?;
+                        client
+                            .add_issue_link(&issue_ref, &relation, &target)
+                            .await?;
+                    }
+
+                    let issue = client.get_issue(&issue_ref).await?;
                     render_issue_detail(&issue, global.json)?;
                 }
                 IssueCommands::Delete { id } => {
@@ -221,23 +250,22 @@ async fn main() -> Result<()> {
                     render_comment(&comment, global.json)?;
                 }
                 IssueCommands::Update(args) => {
-                    if args.project.is_none()
-                        && args.state.is_none()
+                    if args.state.is_none()
                         && args.assignee.is_none()
                         && args.priority.is_none()
                         && args.issue_type.is_none()
                         && args.summary.is_none()
                         && args.description.is_none()
+                        && args.link.is_empty()
+                        && args.unlink.is_empty()
                     {
                         return Err(TrackItError::Config(
-                            "issues update needs at least one of: --project, --state, --assignee, --priority, --type, --summary, --description"
+                            "issues update needs at least one of: --state, --assignee, --priority, --type, --summary, --description, --link, --unlink"
                                 .to_string(),
                         ));
                     }
 
-                    if let Some(project) = args.project.as_deref() {
-                        client.update_issue_project(&args.id, project).await?;
-                    }
+                    client.update_issue_project(&args.id, &args.project).await?;
                     if let Some(state) = args.state.as_deref() {
                         client.update_issue_state(&args.id, state).await?;
                     }
@@ -258,6 +286,18 @@ async fn main() -> Result<()> {
                                 args.summary.as_deref(),
                                 args.description.as_deref(),
                             )
+                            .await?;
+                    }
+
+                    for link in &args.link {
+                        let (relation, target) = parse_link_spec(link)?;
+                        client.add_issue_link(&args.id, &relation, &target).await?;
+                    }
+
+                    for link in &args.unlink {
+                        let (relation, target) = parse_link_spec(link)?;
+                        client
+                            .remove_issue_link(&args.id, &relation, &target)
                             .await?;
                     }
 
@@ -295,8 +335,9 @@ async fn try_print_dynamic_help() -> Result<bool> {
         .find_subcommand_mut(top)
         .and_then(|c| c.find_subcommand_mut(sub))
     {
+        let project = parse_subcommand_project_from_args(&args);
         let after_help = match build_client(&global) {
-            Ok(client) => build_dynamic_after_help(&client, sub).await,
+            Ok(client) => build_dynamic_after_help(&client, sub, project.as_deref()).await,
             Err(err) => format!(
                 "Dynamic values unavailable: {err}\nProvide `--url` and `--token` (or env/config), then run help again."
             ),
@@ -347,26 +388,66 @@ fn parse_global_opts_from_args(args: &[String]) -> GlobalOpts {
     }
 }
 
-async fn build_dynamic_after_help(client: &YouTrackClient, subcommand: &str) -> String {
+fn parse_subcommand_project_from_args(args: &[String]) -> Option<String> {
+    let mut i = 1usize;
+    while i < args.len() {
+        let arg = &args[i];
+        if let Some(value) = arg.strip_prefix("--project=") {
+            return Some(value.to_string());
+        }
+        if arg == "--project" && i + 1 < args.len() {
+            return Some(args[i + 1].clone());
+        }
+        i += 1;
+    }
+    None
+}
+
+async fn build_dynamic_after_help(
+    client: &YouTrackClient,
+    subcommand: &str,
+    project: Option<&str>,
+) -> String {
     if subcommand == "list" {
-        return build_list_after_help(client).await;
+        return build_list_after_help(client, project).await;
     }
     if subcommand == "update" {
-        return build_update_after_help(client).await;
+        return build_update_after_help(client, project).await;
     }
     String::new()
 }
 
-async fn build_list_after_help(client: &YouTrackClient) -> String {
-    let project = client.list_project_values().await;
-    let state = client.suggest_list_values("State").await;
-    let assignee = client.suggest_list_values("Assignee").await;
-    let priority = client.suggest_list_values("Priority").await;
-    let issue_type = client.suggest_list_values("Type").await;
+async fn build_list_after_help(client: &YouTrackClient, project: Option<&str>) -> String {
+    let projects = client.list_project_values().await;
+    let (notice, state, assignee, priority, issue_type) = if let Some(project_key) = project {
+        (
+            String::new(),
+            client
+                .suggest_list_values_for_project(project_key, "State")
+                .await,
+            client
+                .suggest_list_values_for_project(project_key, "Assignee")
+                .await,
+            client
+                .suggest_list_values_for_project(project_key, "Priority")
+                .await,
+            client
+                .suggest_list_values_for_project(project_key, "Type")
+                .await,
+        )
+    } else {
+        (
+            "Project-scoped values require --project <PROJECT>.\n".to_string(),
+            Ok(Vec::new()),
+            Ok(Vec::new()),
+            Ok(Vec::new()),
+            Ok(Vec::new()),
+        )
+    };
 
     format!(
-        "Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
-        summarize_values(project),
+        "{notice}Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
+        summarize_values(projects),
         summarize_values(state),
         summarize_values(assignee),
         summarize_values(priority),
@@ -374,16 +455,37 @@ async fn build_list_after_help(client: &YouTrackClient) -> String {
     )
 }
 
-async fn build_update_after_help(client: &YouTrackClient) -> String {
-    let project = client.list_project_values().await;
-    let state = client.suggest_update_values("State").await;
-    let assignee = client.suggest_update_values("Assignee").await;
-    let priority = client.suggest_update_values("Priority").await;
-    let issue_type = client.suggest_update_values("Type").await;
+async fn build_update_after_help(client: &YouTrackClient, project: Option<&str>) -> String {
+    let projects = client.list_project_values().await;
+    let (notice, state, assignee, priority, issue_type) = if let Some(project_key) = project {
+        (
+            String::new(),
+            client
+                .suggest_update_values_for_project(project_key, "State")
+                .await,
+            client
+                .suggest_update_values_for_project(project_key, "Assignee")
+                .await,
+            client
+                .suggest_update_values_for_project(project_key, "Priority")
+                .await,
+            client
+                .suggest_update_values_for_project(project_key, "Type")
+                .await,
+        )
+    } else {
+        (
+            "Project-scoped values require --project <PROJECT>.\n".to_string(),
+            Ok(Vec::new()),
+            Ok(Vec::new()),
+            Ok(Vec::new()),
+            Ok(Vec::new()),
+        )
+    };
 
     format!(
-        "Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
-        summarize_values(project),
+        "{notice}Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
+        summarize_values(projects),
         summarize_values(state),
         summarize_values(assignee),
         summarize_values(priority),
@@ -551,8 +653,43 @@ fn render_issue_detail(issue: &api::models::Issue, as_json: bool) -> Result<()> 
         let names: Vec<String> = tags.iter().map(|tag| opt_str(&tag.name)).collect();
         println!("tags: {}", names.join(", "));
     }
+    render_issue_links(issue);
 
     Ok(())
+}
+
+fn render_issue_links(issue: &api::models::Issue) {
+    let mut rows: Vec<String> = Vec::new();
+    let Some(links) = &issue.links else {
+        return;
+    };
+
+    for link in links {
+        let relation = link
+            .link_type
+            .as_ref()
+            .and_then(|lt| lt.name.clone())
+            .unwrap_or_default();
+        let related = link
+            .issues
+            .as_ref()
+            .or(link.trimmed_issues.as_ref())
+            .cloned()
+            .unwrap_or_default();
+
+        for linked in related {
+            let id_readable = linked.id_readable.or(linked.id).unwrap_or_else(String::new);
+            let summary = linked.summary.flatten().unwrap_or_default();
+            rows.push(format!("{relation}: {id_readable} {summary}"));
+        }
+    }
+
+    if !rows.is_empty() {
+        println!("links:");
+        for row in rows {
+            println!("  - {row}");
+        }
+    }
 }
 
 #[derive(Serialize, Tabled)]
@@ -587,17 +724,13 @@ fn opt_nested_str(value: &Option<Option<String>>) -> String {
 }
 
 fn build_issue_query(
-    project: Option<&str>,
+    project: &str,
     state: Option<&str>,
     assignee: Option<&str>,
     priority: Option<&str>,
     issue_type: Option<&str>,
-) -> Option<String> {
-    let mut parts = Vec::new();
-
-    if let Some(project) = project {
-        parts.push(format!("project:{}", quote_query_value(project)));
-    }
+) -> String {
+    let mut parts = vec![format!("project:{}", quote_query_value(project))];
 
     if let Some(state) = state {
         parts.push(format!("State:{}", quote_query_value(state)));
@@ -612,11 +745,7 @@ fn build_issue_query(
         parts.push(format!("Type:{}", quote_query_value(issue_type)));
     }
 
-    if parts.is_empty() {
-        None
-    } else {
-        Some(parts.join(" "))
-    }
+    parts.join(" ")
 }
 
 fn quote_query_value(value: &str) -> String {
@@ -625,6 +754,24 @@ fn quote_query_value(value: &str) -> String {
     } else {
         value.to_string()
     }
+}
+
+fn parse_link_spec(value: &str) -> Result<(String, String)> {
+    let Some((relation, issue)) = value.split_once(':') else {
+        return Err(TrackItError::Config(format!(
+            "Invalid link format '{value}'. Expected RELATION:ISSUE, e.g. 'relates to:PRJ-123'"
+        )));
+    };
+
+    let relation = relation.trim();
+    let issue = issue.trim();
+    if relation.is_empty() || issue.is_empty() {
+        return Err(TrackItError::Config(format!(
+            "Invalid link format '{value}'. Both relation and issue must be non-empty"
+        )));
+    }
+
+    Ok((relation.to_string(), issue.to_string()))
 }
 
 fn issue_custom_field(issue: &api::models::Issue, field_name: &str) -> String {
