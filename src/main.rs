@@ -4,9 +4,10 @@ mod error;
 mod output;
 mod youtrack;
 
-use clap::{ArgAction, Args, Parser, Subcommand};
+use clap::{Args, CommandFactory, Parser, Subcommand};
 use cli::run_setup_wizard;
 use serde::Serialize;
+use std::env;
 use tabled::Tabled;
 
 use crate::config::Config;
@@ -110,13 +111,6 @@ enum IssueCommands {
     #[command(about = "Delete issue")]
     Delete { id: String },
 
-    #[command(about = "Assign issue")]
-    Assign {
-        id: String,
-        #[arg(long)]
-        user: String,
-    },
-
     #[command(about = "Add comment to issue")]
     Comment {
         id: String,
@@ -142,17 +136,27 @@ struct IssueCreateArgs {
 struct IssueUpdateArgs {
     id: String,
     #[arg(long)]
+    project: Option<String>,
+    #[arg(long)]
     state: Option<String>,
+    #[arg(long)]
+    assignee: Option<String>,
+    #[arg(long)]
+    priority: Option<String>,
+    #[arg(long = "type")]
+    issue_type: Option<String>,
     #[arg(long)]
     summary: Option<String>,
     #[arg(long)]
     description: Option<String>,
-    #[arg(long = "tag", action = ArgAction::Append)]
-    tags: Vec<String>,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    if try_print_dynamic_help().await? {
+        return Ok(());
+    }
+
     let cli = Cli::parse();
     let global = GlobalOpts {
         json: cli.json,
@@ -212,29 +216,39 @@ async fn main() -> Result<()> {
                     client.delete_issue(&id).await?;
                     println!("Deleted issue {id}");
                 }
-                IssueCommands::Assign { id, user } => {
-                    client.assign_issue(&id, &user).await?;
-                    let issue = client.get_issue(&id).await?;
-                    render_issue_detail(&issue, global.json)?;
-                }
                 IssueCommands::Comment { id, text } => {
                     let comment = client.comment_issue(&id, &text).await?;
                     render_comment(&comment, global.json)?;
                 }
                 IssueCommands::Update(args) => {
-                    if args.state.is_none()
+                    if args.project.is_none()
+                        && args.state.is_none()
+                        && args.assignee.is_none()
+                        && args.priority.is_none()
+                        && args.issue_type.is_none()
                         && args.summary.is_none()
                         && args.description.is_none()
-                        && args.tags.is_empty()
                     {
                         return Err(TrackItError::Config(
-                            "issues update needs at least one of: --state, --summary, --description, --tag"
+                            "issues update needs at least one of: --project, --state, --assignee, --priority, --type, --summary, --description"
                                 .to_string(),
                         ));
                     }
 
+                    if let Some(project) = args.project.as_deref() {
+                        client.update_issue_project(&args.id, project).await?;
+                    }
                     if let Some(state) = args.state.as_deref() {
                         client.update_issue_state(&args.id, state).await?;
+                    }
+                    if let Some(assignee) = args.assignee.as_deref() {
+                        client.assign_issue(&args.id, assignee).await?;
+                    }
+                    if let Some(priority) = args.priority.as_deref() {
+                        client.update_issue_priority(&args.id, priority).await?;
+                    }
+                    if let Some(issue_type) = args.issue_type.as_deref() {
+                        client.update_issue_type(&args.id, issue_type).await?;
                     }
 
                     if args.summary.is_some() || args.description.is_some() {
@@ -247,10 +261,6 @@ async fn main() -> Result<()> {
                             .await?;
                     }
 
-                    for tag in &args.tags {
-                        client.add_tag(&args.id, tag).await?;
-                    }
-
                     let issue = client.get_issue(&args.id).await?;
                     render_issue_detail(&issue, global.json)?;
                 }
@@ -259,6 +269,145 @@ async fn main() -> Result<()> {
     }
 
     Ok(())
+}
+
+async fn try_print_dynamic_help() -> Result<bool> {
+    let args: Vec<String> = env::args().collect();
+    if !args.iter().any(|arg| arg == "--help" || arg == "-h") {
+        return Ok(false);
+    }
+
+    let target = if args.iter().any(|arg| arg == "issues") && args.iter().any(|arg| arg == "list") {
+        Some(("issues", "list"))
+    } else if args.iter().any(|arg| arg == "issues") && args.iter().any(|arg| arg == "update") {
+        Some(("issues", "update"))
+    } else {
+        None
+    };
+
+    let Some((top, sub)) = target else {
+        return Ok(false);
+    };
+
+    let global = parse_global_opts_from_args(&args);
+    let mut root = Cli::command();
+    if let Some(command) = root
+        .find_subcommand_mut(top)
+        .and_then(|c| c.find_subcommand_mut(sub))
+    {
+        let after_help = match build_client(&global) {
+            Ok(client) => build_dynamic_after_help(&client, sub).await,
+            Err(err) => format!(
+                "Dynamic values unavailable: {err}\nProvide `--url` and `--token` (or env/config), then run help again."
+            ),
+        };
+        let mut command_with_help = command.clone().after_help(after_help);
+        command_with_help.print_long_help()?;
+        println!();
+        return Ok(true);
+    }
+
+    Ok(false)
+}
+
+fn parse_global_opts_from_args(args: &[String]) -> GlobalOpts {
+    let mut url = None;
+    let mut token = None;
+
+    let mut i = 1usize;
+    while i < args.len() {
+        let arg = &args[i];
+        if let Some(value) = arg.strip_prefix("--url=") {
+            url = Some(value.to_string());
+            i += 1;
+            continue;
+        }
+        if let Some(value) = arg.strip_prefix("--token=") {
+            token = Some(value.to_string());
+            i += 1;
+            continue;
+        }
+        if arg == "--url" && i + 1 < args.len() {
+            url = Some(args[i + 1].clone());
+            i += 2;
+            continue;
+        }
+        if arg == "--token" && i + 1 < args.len() {
+            token = Some(args[i + 1].clone());
+            i += 2;
+            continue;
+        }
+        i += 1;
+    }
+
+    GlobalOpts {
+        json: false,
+        url,
+        token,
+    }
+}
+
+async fn build_dynamic_after_help(client: &YouTrackClient, subcommand: &str) -> String {
+    if subcommand == "list" {
+        return build_list_after_help(client).await;
+    }
+    if subcommand == "update" {
+        return build_update_after_help(client).await;
+    }
+    String::new()
+}
+
+async fn build_list_after_help(client: &YouTrackClient) -> String {
+    let project = client.list_project_values().await;
+    let state = client.suggest_list_values("State").await;
+    let assignee = client.suggest_list_values("Assignee").await;
+    let priority = client.suggest_list_values("Priority").await;
+    let issue_type = client.suggest_list_values("Type").await;
+
+    format!(
+        "Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
+        summarize_values(project),
+        summarize_values(state),
+        summarize_values(assignee),
+        summarize_values(priority),
+        summarize_values(issue_type),
+    )
+}
+
+async fn build_update_after_help(client: &YouTrackClient) -> String {
+    let project = client.list_project_values().await;
+    let state = client.suggest_update_values("State").await;
+    let assignee = client.suggest_update_values("Assignee").await;
+    let priority = client.suggest_update_values("Priority").await;
+    let issue_type = client.suggest_update_values("Type").await;
+
+    format!(
+        "Possible values (live from YouTrack):\n  --project: {}\n  --state: {}\n  --assignee: {}\n  --priority: {}\n  --type: {}",
+        summarize_values(project),
+        summarize_values(state),
+        summarize_values(assignee),
+        summarize_values(priority),
+        summarize_values(issue_type),
+    )
+}
+
+fn summarize_values(result: Result<Vec<String>>) -> String {
+    match result {
+        Ok(values) if values.is_empty() => "(none)".to_string(),
+        Ok(values) => {
+            let limit = 12usize;
+            if values.len() > limit {
+                format!(
+                    "{} ... (+{} more)",
+                    values[..limit].join(", "),
+                    values.len() - limit
+                )
+            } else {
+                values.join(", ")
+            }
+        }
+        Err(err) => format!("error: {err}"),
+    }
 }
 
 fn build_client(global: &GlobalOpts) -> Result<YouTrackClient> {

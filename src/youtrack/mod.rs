@@ -126,6 +126,21 @@ impl YouTrackClient {
             .await
     }
 
+    pub async fn update_issue_project(&self, id: &str, project: &str) -> Result<()> {
+        self.run_issue_command(id, &format!("project {}", project))
+            .await
+    }
+
+    pub async fn update_issue_priority(&self, id: &str, priority: &str) -> Result<()> {
+        self.run_issue_command(id, &format!("Priority {}", priority))
+            .await
+    }
+
+    pub async fn update_issue_type(&self, id: &str, issue_type: &str) -> Result<()> {
+        self.run_issue_command(id, &format!("Type {}", issue_type))
+            .await
+    }
+
     pub async fn update_issue_text(
         &self,
         id: &str,
@@ -153,13 +168,65 @@ impl YouTrackClient {
         .map_err(map_api_error)
     }
 
-    pub async fn add_tag(&self, id: &str, tag_name: &str) -> Result<models::Tag> {
-        let mut tag = models::Tag::new();
-        tag.name = Some(tag_name.to_string());
+    pub async fn list_project_values(&self) -> Result<Vec<String>> {
+        let projects = default_api::admin_projects_get(
+            &self.configuration,
+            Some("name,shortName"),
+            None,
+            None,
+        )
+        .await
+        .map_err(map_api_error)?;
 
-        default_api::issues_id_tags_post(&self.configuration, id, Some("id,name"), Some(tag))
-            .await
-            .map_err(map_api_error)
+        let mut values: Vec<String> = projects
+            .into_iter()
+            .filter_map(|p| {
+                let short = p.short_name.unwrap_or_default();
+                if short.is_empty() {
+                    p.name
+                } else {
+                    Some(short)
+                }
+            })
+            .collect();
+
+        values.sort();
+        values.dedup();
+        Ok(values)
+    }
+
+    pub async fn suggest_list_values(&self, field: &str) -> Result<Vec<String>> {
+        let query = format!("{field}: ");
+        let mut payload = models::SearchSuggestions::new();
+        payload.query = Some(Some(query.clone()));
+        payload.caret = Some(query.len() as i32);
+
+        let response = default_api::search_assist_post(
+            &self.configuration,
+            Some("suggestions(option,description)"),
+            Some(payload),
+        )
+        .await
+        .map_err(map_api_error)?;
+
+        Ok(extract_suggestion_values(response.suggestions))
+    }
+
+    pub async fn suggest_update_values(&self, field: &str) -> Result<Vec<String>> {
+        let query = format!("{field} ");
+        let mut payload = models::CommandList::new();
+        payload.query = Some(Some(query.clone()));
+        payload.caret = Some(query.len() as i32);
+
+        let response = default_api::commands_assist_post(
+            &self.configuration,
+            Some("suggestions(option,description)"),
+            Some(payload),
+        )
+        .await
+        .map_err(map_api_error)?;
+
+        Ok(extract_suggestion_values(response.suggestions))
     }
 
     async fn run_issue_command(&self, issue_id: &str, command: &str) -> Result<()> {
@@ -202,4 +269,21 @@ fn map_api_error<T: std::fmt::Debug>(error: ApiError<T>) -> TrackItError {
         },
         other => TrackItError::ApiMessage(other.to_string()),
     }
+}
+
+fn extract_suggestion_values(suggestions: Option<Vec<models::Suggestion>>) -> Vec<String> {
+    let mut values: Vec<String> = suggestions
+        .unwrap_or_default()
+        .into_iter()
+        .filter_map(|s| {
+            let option = s.option.and_then(|v| v);
+            let description = s.description.and_then(|v| v);
+            option.or(description)
+        })
+        .filter(|v| !v.trim().is_empty())
+        .collect();
+
+    values.sort();
+    values.dedup();
+    values
 }
