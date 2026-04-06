@@ -8,7 +8,7 @@ use super::project_field_helpers::{
     ProjectFieldSuggestion, extract_custom_field_values_from_json, normalize_values,
     project_custom_field_id, project_custom_field_name,
 };
-use super::utils::map_api_error;
+use crate::utils::text::map_api_error;
 
 const PROJECT_FIELDS: &str = "id,name,shortName,archived";
 
@@ -48,7 +48,11 @@ impl YouTrackClient {
             });
         }
 
-        suggestions.sort_by(|a, b| a.name.to_ascii_lowercase().cmp(&b.name.to_ascii_lowercase()));
+        suggestions.sort_by(|a, b| {
+            a.name
+                .to_ascii_lowercase()
+                .cmp(&b.name.to_ascii_lowercase())
+        });
         suggestions.dedup_by(|a, b| a.name.eq_ignore_ascii_case(&b.name));
         Ok(suggestions)
     }

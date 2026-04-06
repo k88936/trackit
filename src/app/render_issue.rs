@@ -230,12 +230,8 @@ fn link_relation_label(link: &api::models::IssueLink) -> Option<String> {
 
     use api::models::issue_link::Direction;
     match link.direction {
-        Some(Direction::Outward) => source_to_target
-            .or(name)
-            .map(str::to_string),
-        Some(Direction::Inward) => target_to_source
-            .or(name)
-            .map(str::to_string),
+        Some(Direction::Outward) => source_to_target.or(name).map(str::to_string),
+        Some(Direction::Inward) => target_to_source.or(name).map(str::to_string),
         Some(Direction::Both) => match (source_to_target, target_to_source) {
             (Some(src), Some(tgt)) if src != tgt => Some(format!("{src} / {tgt}")),
             (Some(src), _) => Some(src.to_string()),

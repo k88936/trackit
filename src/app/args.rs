@@ -115,7 +115,10 @@ pub enum IssueCommands {
 
 #[derive(Args)]
 pub struct IssueCreateArgs {
-    #[arg(long, help = "Project id or short name where the issue will be created")]
+    #[arg(
+        long,
+        help = "Project id or short name where the issue will be created"
+    )]
     pub project: String,
     #[arg(long, help = "Issue summary/title")]
     pub summary: String,

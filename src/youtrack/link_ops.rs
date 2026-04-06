@@ -4,7 +4,7 @@ use api::models;
 use crate::error::{Result, TrackItError};
 
 use super::client::YouTrackClient;
-use super::utils::map_api_error;
+use crate::utils::text::map_api_error;
 
 const ISSUE_LINK_TYPES_FIELDS: &str = "id,name,sourceToTarget,targetToSource,directed";
 
@@ -16,7 +16,7 @@ impl YouTrackClient {
         target_issue: &str,
     ) -> Result<()> {
         let source_link_id = self.resolve_link_id(source_issue, relation).await?;
-        let target_id = self.resolve_issue_id(target_issue).await?;
+        let target_id = self.resolve_issue_internal_id(target_issue).await?;
 
         let mut issue = models::Issue::new();
         issue.id = Some(target_id);
@@ -42,7 +42,7 @@ impl YouTrackClient {
         target_issue: &str,
     ) -> Result<()> {
         let source_link_id = self.resolve_link_id(source_issue, relation).await?;
-        let target_id = self.resolve_issue_id(target_issue).await?;
+        let target_id = self.resolve_issue_internal_id(target_issue).await?;
 
         default_api::issues_id_links_issue_link_id_issues_issue_id_delete(
             &self.configuration,
@@ -56,23 +56,15 @@ impl YouTrackClient {
         Ok(())
     }
 
-    async fn resolve_issue_id(&self, issue_ref: &str) -> Result<String> {
-        let issue = default_api::issues_id_get(&self.configuration, issue_ref, Some("id"))
-            .await
-            .map_err(map_api_error)?;
-
-        issue.id.ok_or_else(|| {
-            TrackItError::ApiMessage(format!(
-                "Issue '{issue_ref}' resolved without an internal id"
-            ))
-        })
-    }
-
     async fn resolve_link_id(&self, issue_ref: &str, relation: &str) -> Result<String> {
-        let link_types =
-            default_api::issue_link_types_get(&self.configuration, Some(ISSUE_LINK_TYPES_FIELDS), None, None)
-                .await
-                .map_err(map_api_error)?;
+        let link_types = default_api::issue_link_types_get(
+            &self.configuration,
+            Some(ISSUE_LINK_TYPES_FIELDS),
+            None,
+            None,
+        )
+        .await
+        .map_err(map_api_error)?;
 
         for link_type in link_types {
             let match_source_to_target = link_type

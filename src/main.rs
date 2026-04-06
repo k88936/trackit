@@ -4,17 +4,20 @@ mod config;
 mod error;
 mod output;
 mod youtrack;
+pub mod utils;
 
 use clap::Parser;
 
 use crate::app::args::{Commands, IssueCommands, ProjectCommands};
 use crate::app::context::build_client;
-use crate::app::parsing::{build_issue_query, parse_key_value_specs, parse_link_spec, summarize_plain_values};
+use crate::app::parsing::{
+    build_issue_query, parse_key_value_specs, parse_link_spec, summarize_plain_values,
+};
 use crate::app::render_basic::{
     render_comment, render_me, render_project_custom_fields, render_projects,
 };
 use crate::app::render_issue::{render_issue_detail, render_issues};
-use crate::app::utils::text::{decode_cli_escapes, read_text_file};
+use utils::text::{decode_cli_escapes, read_text_file};
 use crate::cli::run_setup_wizard;
 use crate::error::TrackItError;
 use app::args::Cli;
@@ -81,11 +84,7 @@ async fn main() -> Result<()> {
                         args.description.as_deref().map(decode_cli_escapes)
                     };
                     let issue = client
-                        .create_issue(
-                            &args.project,
-                            &args.summary,
-                            description.as_deref(),
-                        )
+                        .create_issue(&args.project, &args.summary, description.as_deref())
                         .await?;
                     let issue_ref =
                         issue
@@ -129,11 +128,7 @@ async fn main() -> Result<()> {
                         args.description.as_deref().map(decode_cli_escapes)
                     };
                     client
-                        .update_issue(
-                            &args.id,
-                            args.summary.as_deref(),
-                            description.as_deref(),
-                        )
+                        .update_issue(&args.id, args.summary.as_deref(), description.as_deref())
                         .await?;
 
                     let assignments = parse_key_value_specs(&args.field, "--field")?;

@@ -1,13 +1,11 @@
 use api::apis::default_api;
 use api::models;
 use std::collections::BTreeSet;
-
+use crate::utils::text::{map_api_error, quote_command_part};
 use crate::error::Result;
 
 use super::client::YouTrackClient;
 use super::project_field_helpers::project_custom_field_type_id;
-use super::utils::{map_api_error, quote_command_part};
-
 const ME_FIELDS: &str = "id,login,fullName,email";
 const ISSUE_COMMENT_FIELDS: &str = "id,text,author(id,login,fullName),created";
 
@@ -25,7 +23,9 @@ impl YouTrackClient {
         skip: Option<i32>,
         top: Option<i32>,
     ) -> Result<Vec<models::Issue>> {
-        let fields = self.build_issue_fields_mask(IssueFieldMaskKind::List, project).await;
+        let fields = self
+            .build_issue_fields_mask(IssueFieldMaskKind::List, project)
+            .await;
         default_api::issues_get(
             &self.configuration,
             query,
@@ -104,7 +104,11 @@ impl YouTrackClient {
     }
 
     pub async fn update_issue_field(&self, id: &str, key: &str, value: &str) -> Result<()> {
-        let command = format!("{} {}", quote_command_part(key), quote_command_part(value));
+        let command = format!(
+            "{} {}",
+            quote_command_part(key),
+            format_command_value(value)
+        );
         self.run_issue_command(id, &command).await
     }
 
@@ -136,8 +140,9 @@ impl YouTrackClient {
     }
 
     async fn run_issue_command(&self, issue_id: &str, command: &str) -> Result<()> {
+        let internal_issue_id = self.resolve_issue_internal_id(issue_id).await?;
         let mut issue = models::Issue::new();
-        issue.id = Some(issue_id.to_string());
+        issue.id = Some(internal_issue_id);
 
         let mut payload = models::CommandList::new();
         payload.query = Some(Some(command.to_string()));
@@ -150,10 +155,23 @@ impl YouTrackClient {
         Ok(())
     }
 
-    async fn get_issue_project_key(&self, id: &str) -> Result<Option<String>> {
-        let issue = default_api::issues_id_get(&self.configuration, id, Some("project(id,shortName,name)"))
+    pub(super) async fn resolve_issue_internal_id(&self, issue_ref: &str) -> Result<String> {
+        let issue = default_api::issues_id_get(&self.configuration, issue_ref, Some("id"))
             .await
             .map_err(map_api_error)?;
+
+        issue.id.ok_or_else(|| {
+            crate::error::TrackItError::ApiMessage(format!(
+                "Issue '{issue_ref}' resolved without an internal id"
+            ))
+        })
+    }
+
+    async fn get_issue_project_key(&self, id: &str) -> Result<Option<String>> {
+        let issue =
+            default_api::issues_id_get(&self.configuration, id, Some("project(id,shortName,name)"))
+                .await
+                .map_err(map_api_error)?;
 
         let project = issue.project.as_deref();
         let key = project
@@ -304,4 +322,13 @@ fn value_fields_for_type(field_type_id: &str) -> &'static [&'static str] {
     }
 
     &["name"]
+}
+
+fn format_command_value(value: &str) -> String {
+    let trimmed = value.trim();
+    if trimmed.chars().any(char::is_whitespace) {
+        trimmed.to_string()
+    } else {
+        quote_command_part(trimmed)
+    }
 }

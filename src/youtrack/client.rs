@@ -2,7 +2,7 @@ use api::apis::configuration::Configuration;
 
 use crate::error::Result;
 
-use super::utils::normalize_base_path;
+use crate::utils::text::normalize_base_path;
 
 pub struct YouTrackClient {
     pub(super) configuration: Configuration,
