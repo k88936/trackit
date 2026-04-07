@@ -38,24 +38,20 @@ pub enum Commands {
     SetupWizard,
     #[command(about = "Show current authenticated user")]
     Me,
-    #[command(
-        name = "project",
-        visible_alias = "projects",
-        about = "Project operations"
-    )]
-    Projects {
+    #[command(about = "Project operations")]
+    Project {
         #[command(subcommand)]
-        command: ProjectCommands,
+        command: ProjectCommand,
     },
     #[command(about = "Issue operations")]
-    Issues {
+    Issue {
         #[command(subcommand)]
-        command: IssueCommands,
+        command: IssueCommand,
     },
 }
 
 #[derive(Subcommand)]
-pub enum ProjectCommands {
+pub enum ProjectCommand {
     #[command(about = "List projects")]
     List {
         #[arg(long, help = "Number of projects to skip before listing")]
@@ -74,7 +70,7 @@ pub enum ProjectCommands {
 }
 
 #[derive(Subcommand)]
-pub enum IssueCommands {
+pub enum IssueCommand {
     #[command(about = "List issues")]
     List {
         #[arg(long, help = "Limit results to a project id or short name")]

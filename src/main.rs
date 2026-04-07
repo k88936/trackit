@@ -8,7 +8,7 @@ mod youtrack;
 
 use clap::Parser;
 
-use crate::app::args::{Commands, IssueCommands, ProjectCommands};
+use crate::app::args::{Commands, IssueCommand, ProjectCommand};
 use crate::app::context::build_client;
 use crate::app::parsing::{
     build_issue_query, parse_key_value_specs, parse_link_spec, summarize_plain_values,
@@ -41,14 +41,14 @@ async fn main() -> Result<()> {
             let me = client.me().await?;
             render_me(&me, global.json)?;
         }
-        Commands::Projects { command } => {
+        Commands::Project { command } => {
             let client = build_client(&global)?;
             match command {
-                ProjectCommands::List { skip, top } => {
+                ProjectCommand::List { skip, top } => {
                     let projects = client.list_projects(skip, top).await?;
                     render_projects(&projects, global.json)?;
                 }
-                ProjectCommands::GetCustomField { project } => {
+                ProjectCommand::GetCustomField { project } => {
                     let fields = client
                         .list_project_custom_field_suggestions(&project)
                         .await?;
@@ -56,10 +56,10 @@ async fn main() -> Result<()> {
                 }
             }
         }
-        Commands::Issues { command } => {
+        Commands::Issue { command } => {
             let client = build_client(&global)?;
             match command {
-                IssueCommands::List {
+                IssueCommand::List {
                     project,
                     filters,
                     skip,
@@ -72,11 +72,11 @@ async fn main() -> Result<()> {
                         .await?;
                     render_issues(&issues, global.json)?;
                 }
-                IssueCommands::Get { id } => {
+                IssueCommand::Get { id } => {
                     let issue = client.get_issue(&id).await?;
                     render_issue_detail(&issue, global.json)?;
                 }
-                IssueCommands::Create(args) => {
+                IssueCommand::Create(args) => {
                     let assignments = parse_key_value_specs(&args.fields, "--field")?;
                     let description = if let Some(path) = args.description_file.as_deref() {
                         Some(read_text_file(path)?)
@@ -112,16 +112,16 @@ async fn main() -> Result<()> {
                     let issue = client.get_issue(&issue_ref).await?;
                     render_issue_detail(&issue, global.json)?;
                 }
-                IssueCommands::Delete { id } => {
+                IssueCommand::Delete { id } => {
                     client.delete_issue(&id).await?;
                     println!("Deleted issue {id}");
                 }
-                IssueCommands::Comment { id, text } => {
+                IssueCommand::Comment { id, text } => {
                     let text = decode_cli_escapes(&text);
                     let comment = client.comment_issue(&id, &text).await?;
                     render_comment(&comment, global.json)?;
                 }
-                IssueCommands::Update(args) => {
+                IssueCommand::Update(args) => {
                     let description = if let Some(path) = args.description_file.as_deref() {
                         Some(read_text_file(path)?)
                     } else {
