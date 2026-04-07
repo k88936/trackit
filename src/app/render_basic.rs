@@ -66,7 +66,10 @@ pub fn render_project_detail(
     println!("short_name: {}", opt_str(&project.short_name));
     println!("name: {}", opt_str(&project.name));
     println!("archived: {}", project.archived.unwrap_or(false));
-    println!("description: {}", opt_nested_str(&project.description));
+    println!(
+        "description:\n------------------------------------------------\n{}\n------------------------------------------------\n",
+        opt_nested_str(&project.description)
+    );
     println!(
         "leader: {}",
         project
