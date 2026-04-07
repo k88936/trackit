@@ -3,14 +3,12 @@ use tabled::Tabled;
 
 use crate::error::Result;
 use crate::output::{format_json, format_table};
-use crate::youtrack::ProjectFieldSuggestion;
+use crate::youtrack::ProjectDetail;
 
 #[derive(Serialize, Tabled)]
 struct MeRow {
-    id: String,
     login: String,
     full_name: String,
-    email: String,
 }
 
 pub fn render_me(me: &api::models::Me, as_json: bool) -> Result<()> {
@@ -20,10 +18,8 @@ pub fn render_me(me: &api::models::Me, as_json: bool) -> Result<()> {
     }
 
     let row = MeRow {
-        id: opt_str(&me.id),
         login: opt_str(&me.login),
         full_name: opt_str(&me.full_name),
-        email: opt_nested_str(&me.email),
     };
 
     println!("{}", format_table(&[row]));
@@ -32,7 +28,6 @@ pub fn render_me(me: &api::models::Me, as_json: bool) -> Result<()> {
 
 #[derive(Serialize, Tabled)]
 struct ProjectRow {
-    id: String,
     short_name: String,
     name: String,
     archived: bool,
@@ -47,7 +42,6 @@ pub fn render_projects(projects: &[api::models::Project], as_json: bool) -> Resu
     let rows: Vec<ProjectRow> = projects
         .iter()
         .map(|p| ProjectRow {
-            id: opt_str(&p.id),
             short_name: opt_str(&p.short_name),
             name: opt_str(&p.name),
             archived: p.archived.unwrap_or(false),
@@ -58,39 +52,49 @@ pub fn render_projects(projects: &[api::models::Project], as_json: bool) -> Resu
     Ok(())
 }
 
-#[derive(Serialize, Tabled)]
-struct ProjectCustomFieldRow {
-    name: String,
-    values: String,
-}
-
-pub fn render_project_custom_fields(
-    fields: &[ProjectFieldSuggestion],
+pub fn render_project_detail(
+    detail: &ProjectDetail,
     as_json: bool,
     summarize_values: impl Fn(&[String]) -> String,
 ) -> Result<()> {
     if as_json {
-        println!("{}", format_json(fields)?);
+        println!("{}", format_json(detail)?);
         return Ok(());
     }
 
-    let rows: Vec<ProjectCustomFieldRow> = fields
-        .iter()
-        .map(|field| ProjectCustomFieldRow {
-            name: field.name.clone(),
-            values: summarize_values(&field.values),
-        })
-        .collect();
+    let project = &detail.project;
+    println!("short_name: {}", opt_str(&project.short_name));
+    println!("name: {}", opt_str(&project.name));
+    println!("archived: {}", project.archived.unwrap_or(false));
+    println!("description: {}", opt_nested_str(&project.description));
+    println!(
+        "leader: {}",
+        project
+            .leader
+            .as_ref()
+            .map(|u| user_display_name(u.as_ref()))
+            .unwrap_or_default()
+    );
 
-    println!("{}", format_table(&rows));
+    if let Some(team) = &project.team {
+        println!("team: {}", opt_str(&team.name));
+    }
+
+    if detail.custom_fields.is_empty() {
+        println!("custom_fields: (none)");
+    } else {
+        println!("custom_fields:");
+        for field in &detail.custom_fields {
+            println!("  - {}: {}", field.name, summarize_values(&field.values));
+        }
+    }
+
     Ok(())
 }
 
 #[derive(Serialize, Tabled)]
 struct CommentRow {
-    id: String,
     text: String,
-    created: String,
 }
 
 pub fn render_comment(comment: &api::models::IssueComment, as_json: bool) -> Result<()> {
@@ -100,9 +104,7 @@ pub fn render_comment(comment: &api::models::IssueComment, as_json: bool) -> Res
     }
 
     let row = CommentRow {
-        id: opt_str(&comment.id),
         text: opt_nested_str(&comment.text),
-        created: comment.created.map(|t| t.to_string()).unwrap_or_default(),
     };
 
     println!("{}", format_table(&[row]));
@@ -115,4 +117,35 @@ pub(crate) fn opt_str(value: &Option<String>) -> String {
 
 pub(crate) fn opt_nested_str(value: &Option<Option<String>>) -> String {
     value.clone().flatten().unwrap_or_default()
+}
+
+fn user_display_name(user: &api::models::User) -> String {
+    use api::models::User;
+
+    let (full_name, login, id) = match user {
+        User::Me {
+            full_name,
+            login,
+            id,
+            ..
+        }
+        | User::User {
+            full_name,
+            login,
+            id,
+            ..
+        }
+        | User::VcsUnresolvedUser {
+            full_name,
+            login,
+            id,
+            ..
+        } => (full_name, login, id),
+    };
+
+    full_name
+        .clone()
+        .or_else(|| login.clone())
+        .or_else(|| id.clone())
+        .unwrap_or_default()
 }

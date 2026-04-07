@@ -11,6 +11,14 @@ use super::project_field_helpers::{
 use crate::utils::text::map_api_error;
 
 const PROJECT_FIELDS: &str = "id,name,shortName,archived";
+const PROJECT_DETAIL_FIELDS: &str =
+    "id,name,shortName,archived,description,leader(id,login,fullName),team(id,name)";
+
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct ProjectDetail {
+    pub project: models::Project,
+    pub custom_fields: Vec<ProjectFieldSuggestion>,
+}
 
 impl YouTrackClient {
     pub async fn list_projects(
@@ -23,12 +31,26 @@ impl YouTrackClient {
             .map_err(map_api_error)
     }
 
-    pub async fn list_project_custom_field_suggestions(
-        &self,
-        project: &str,
-    ) -> Result<Vec<ProjectFieldSuggestion>> {
+    pub async fn get_project_detail(&self, project: &str) -> Result<ProjectDetail> {
         let project_id = self.resolve_project_id(project).await?;
-        let custom_fields = self.fetch_project_custom_fields(&project_id).await?;
+        let project =
+            default_api::admin_projects_id_get(&self.configuration, &project_id, Some(PROJECT_DETAIL_FIELDS))
+                .await
+                .map_err(map_api_error)?;
+        let custom_fields = self
+            .list_project_custom_field_suggestions_by_id(&project_id)
+            .await?;
+        Ok(ProjectDetail {
+            project,
+            custom_fields,
+        })
+    }
+
+    async fn list_project_custom_field_suggestions_by_id(
+        &self,
+        project_id: &str,
+    ) -> Result<Vec<ProjectFieldSuggestion>> {
+        let custom_fields = self.fetch_project_custom_fields(project_id).await?;
         let mut suggestions = Vec::new();
 
         for field in custom_fields {
@@ -39,7 +61,7 @@ impl YouTrackClient {
                 continue;
             };
             let values = self
-                .fetch_project_custom_field_value_labels(&project_id, field_id)
+                .fetch_project_custom_field_value_labels(project_id, field_id)
                 .await
                 .unwrap_or_default();
             suggestions.push(ProjectFieldSuggestion {

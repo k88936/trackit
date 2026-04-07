@@ -6,8 +6,8 @@ use std::collections::BTreeSet;
 
 use super::client::YouTrackClient;
 use super::project_field_helpers::project_custom_field_type_id;
-const ME_FIELDS: &str = "id,login,fullName,email";
-const ISSUE_COMMENT_FIELDS: &str = "id,text,author(id,login,fullName),created";
+const ME_FIELDS: &str = "login,fullName";
+const ISSUE_COMMENT_FIELDS: &str = "id,text,author(id,login,fullName)";
 
 impl YouTrackClient {
     pub async fn me(&self) -> Result<models::Me> {
@@ -204,7 +204,6 @@ impl YouTrackClient {
 
         match kind {
             IssueFieldMaskKind::List => {
-                parts.push("updated".to_string());
                 parts.push(
                     "links(id,direction,linkType(name,sourceToTarget,targetToSource),issues(id,idReadable),trimmedIssues(id,idReadable))"
                         .to_string(),
@@ -213,11 +212,8 @@ impl YouTrackClient {
             IssueFieldMaskKind::Detail => {
                 parts.extend([
                     "description".to_string(),
-                    "created".to_string(),
-                    "updated".to_string(),
                     "commentsCount".to_string(),
-                    "comments(id,text,created,updated,deleted,author(id,login,fullName))"
-                        .to_string(),
+                    "comments(id,text,author(id,login,fullName))".to_string(),
                     "tags(name)".to_string(),
                     "links(id,direction,linkType(name,sourceToTarget,targetToSource),issues(id,idReadable,summary),trimmedIssues(id,idReadable,summary))".to_string(),
                 ]);

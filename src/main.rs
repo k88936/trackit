@@ -14,7 +14,7 @@ use crate::app::parsing::{
     build_issue_query, parse_key_value_specs, parse_link_spec, summarize_plain_values,
 };
 use crate::app::render_basic::{
-    render_comment, render_me, render_project_custom_fields, render_projects,
+    render_comment, render_me, render_project_detail, render_projects,
 };
 use crate::app::render_issue::{render_issue_detail, render_issues};
 use crate::cli::run_setup_wizard;
@@ -48,11 +48,9 @@ async fn main() -> Result<()> {
                     let projects = client.list_projects(skip, top).await?;
                     render_projects(&projects, global.json)?;
                 }
-                ProjectCommand::GetCustomField { project } => {
-                    let fields = client
-                        .list_project_custom_field_suggestions(&project)
-                        .await?;
-                    render_project_custom_fields(&fields, global.json, summarize_plain_values)?;
+                ProjectCommand::Get { project } => {
+                    let detail = client.get_project_detail(&project).await?;
+                    render_project_detail(&detail, global.json, summarize_plain_values)?;
                 }
             }
         }

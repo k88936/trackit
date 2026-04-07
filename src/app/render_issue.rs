@@ -15,7 +15,6 @@ struct IssueRow {
     project: String,
     fields: String,
     links: String,
-    updated: String,
 }
 
 pub fn render_issues(issues: &[api::models::Issue], as_json: bool) -> Result<()> {
@@ -43,7 +42,6 @@ pub fn render_issues(issues: &[api::models::Issue], as_json: bool) -> Result<()>
                 .unwrap_or_default(),
             fields: summarize_issue_fields(issue),
             links: summarize_link_relations(issue),
-            updated: issue.updated.map(|t| t.to_string()).unwrap_or_default(),
         })
         .collect();
 
@@ -57,17 +55,11 @@ pub fn render_issue_detail(issue: &api::models::Issue, as_json: bool) -> Result<
         return Ok(());
     }
 
-    println!("id: {}", opt_str(&issue.id));
-    println!("id_readable: {}", opt_str(&issue.id_readable));
+    println!("id: {}", opt_str(&issue.id_readable));
     println!("summary: {}", opt_nested_str(&issue.summary));
-    println!("description: {}", opt_nested_str(&issue.description));
     println!(
-        "created: {}",
-        issue.created.map(|t| t.to_string()).unwrap_or_default()
-    );
-    println!(
-        "updated: {}",
-        issue.updated.map(|t| t.to_string()).unwrap_or_default()
+        "description:\n------------------------------------------------\n{}\n------------------------------------------------\n",
+        opt_nested_str(&issue.description)
     );
 
     if let Some(project) = &issue.project {
@@ -211,16 +203,9 @@ fn render_issue_links(issue: &api::models::Issue) {
 }
 
 fn render_issue_comments(issue: &api::models::Issue) {
-    let mut comments = issue.comments.clone().unwrap_or_default();
-    comments.sort_by(|a, b| {
-        let a_key = (a.created.unwrap_or(0), a.id.clone().unwrap_or_default());
-        let b_key = (b.created.unwrap_or(0), b.id.clone().unwrap_or_default());
-        a_key.cmp(&b_key)
-    });
+    let comments = issue.comments.clone().unwrap_or_default();
 
     if comments.is_empty() {
-        let count = issue.comments_count.unwrap_or(0);
-        println!("comments: {count}");
         return;
     }
 
@@ -232,7 +217,6 @@ fn render_issue_comments(issue: &api::models::Issue) {
             .map(|u| user_display_name(u.as_ref()))
             .filter(|v| !v.is_empty())
             .unwrap_or_default();
-        let created = comment.created.map(|t| t.to_string()).unwrap_or_default();
         let text = opt_nested_str(&comment.text);
         let text = if text.is_empty() {
             "(empty)".to_string()
@@ -240,7 +224,7 @@ fn render_issue_comments(issue: &api::models::Issue) {
             text.replace('\n', "\\n")
         };
 
-        println!("  - [{created}] {author}: {text}");
+        println!("  - {author}: {text}");
     }
 }
 
