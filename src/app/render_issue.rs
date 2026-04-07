@@ -95,6 +95,7 @@ pub fn render_issue_detail(issue: &api::models::Issue, as_json: bool) -> Result<
         println!("tags: {}", names.join(", "));
     }
     render_issue_links(issue);
+    render_issue_comments(issue);
 
     Ok(())
 }
@@ -207,6 +208,71 @@ fn render_issue_links(issue: &api::models::Issue) {
             println!("  - {row}");
         }
     }
+}
+
+fn render_issue_comments(issue: &api::models::Issue) {
+    let mut comments = issue.comments.clone().unwrap_or_default();
+    comments.sort_by(|a, b| {
+        let a_key = (a.created.unwrap_or(0), a.id.clone().unwrap_or_default());
+        let b_key = (b.created.unwrap_or(0), b.id.clone().unwrap_or_default());
+        a_key.cmp(&b_key)
+    });
+
+    if comments.is_empty() {
+        let count = issue.comments_count.unwrap_or(0);
+        println!("comments: {count}");
+        return;
+    }
+
+    println!("comments ({}):", comments.len());
+    for comment in comments {
+        let author = comment
+            .author
+            .as_ref()
+            .map(|u| user_display_name(u.as_ref()))
+            .filter(|v| !v.is_empty())
+            .unwrap_or_default();
+        let created = comment.created.map(|t| t.to_string()).unwrap_or_default();
+        let text = opt_nested_str(&comment.text);
+        let text = if text.is_empty() {
+            "(empty)".to_string()
+        } else {
+            text.replace('\n', "\\n")
+        };
+
+        println!("  - [{created}] {author}: {text}");
+    }
+}
+
+fn user_display_name(user: &api::models::User) -> String {
+    use api::models::User;
+
+    let (full_name, login, id) = match user {
+        User::Me {
+            full_name,
+            login,
+            id,
+            ..
+        }
+        | User::User {
+            full_name,
+            login,
+            id,
+            ..
+        }
+        | User::VcsUnresolvedUser {
+            full_name,
+            login,
+            id,
+            ..
+        } => (full_name, login, id),
+    };
+
+    full_name
+        .clone()
+        .or_else(|| login.clone())
+        .or_else(|| id.clone())
+        .unwrap_or_default()
 }
 
 fn link_relation_label(link: &api::models::IssueLink) -> Option<String> {

@@ -215,6 +215,9 @@ impl YouTrackClient {
                     "description".to_string(),
                     "created".to_string(),
                     "updated".to_string(),
+                    "commentsCount".to_string(),
+                    "comments(id,text,created,updated,deleted,author(id,login,fullName))"
+                        .to_string(),
                     "tags(name)".to_string(),
                     "links(id,direction,linkType(name,sourceToTarget,targetToSource),issues(id,idReadable,summary),trimmedIssues(id,idReadable,summary))".to_string(),
                 ]);
